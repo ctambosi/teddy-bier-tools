@@ -4,9 +4,9 @@ import { createPinia } from 'pinia'
 import { ZiggyVue } from 'ziggy-js'
 import axios from 'axios'
 
-// Configura axios para que as respostas de validação (422) retornem JSON
 axios.defaults.headers.common['Accept'] = 'application/json'
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
+axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
 
 createInertiaApp({
     title: (title) => title ? `${title} — Teddy Bier Tools` : 'Teddy Bier Tools',

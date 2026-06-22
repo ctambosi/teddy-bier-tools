@@ -1,29 +1,37 @@
 <script setup>
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 import { Head } from '@inertiajs/vue3'
 import axios from 'axios'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import CalculadoraCard from '@/Components/CalculadoraCard.vue'
+import { useDecimalInput } from '@/composables/useDecimalInput'
 
-const form = reactive({ celsius: '', fahrenheit: '' })
-const resultado = ref(null)
-const erroGeral = ref('')
-const loading = ref(false)
+const celsius    = useDecimalInput({ negativo: true })
+const fahrenheit = useDecimalInput({ negativo: true })
+const resultado  = ref(null)
+const erroGeral  = ref('')
+const loading    = ref(false)
 
 function aoDigitar(campo) {
     resultado.value = null
     erroGeral.value = ''
-    form[campo === 'celsius' ? 'fahrenheit' : 'celsius'] = ''
+    if (campo === 'celsius') fahrenheit.reset()
+    else celsius.reset()
 }
 
 async function calcular() {
     erroGeral.value = ''
     loading.value = true
+    console.log(celsius.numeric.value, fahrenheit.numeric.value)
     try {
-        const { data } = await axios.post(route('conversao.temperatura.calcular'), form)
+        const { data } = await axios.post(route('temperatura.calcular'), {
+            celsius:    celsius.numeric.value    || '',
+            fahrenheit: fahrenheit.numeric.value || '',
+        })
+        console.log(data)
         resultado.value = data
-        form.celsius    = parseFloat(data.celsius).toFixed(1)
-        form.fahrenheit = parseFloat(data.fahrenheit).toFixed(1)
+        celsius.set(data.celsius)
+        fahrenheit.set(data.fahrenheit)
     } catch (e) {
         const erros = e.response?.data?.errors ?? {}
         erroGeral.value = erros.geral?.[0]
@@ -35,7 +43,8 @@ async function calcular() {
 }
 
 function limpar() {
-    form.celsius = form.fahrenheit = ''
+    celsius.reset()
+    fahrenheit.reset()
     resultado.value = null
     erroGeral.value = ''
 }
@@ -60,11 +69,11 @@ function eResultado(campo) {
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Celsius (°C)</label>
                     <input
-                        v-model="form.celsius"
-                        @input="aoDigitar('celsius')"
+                        :value="celsius.display.value"
+                        @input="e => { celsius.onInput(e); aoDigitar('celsius') }"
                         type="text"
                         inputmode="decimal"
-                        placeholder="20.0"
+                        placeholder="20,0"
                         class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 transition"
                         :class="eResultado('celsius') ? 'bg-amber-50 border-amber-300' : 'border-gray-300'"
                     />
@@ -73,11 +82,11 @@ function eResultado(campo) {
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Fahrenheit (°F)</label>
                     <input
-                        v-model="form.fahrenheit"
-                        @input="aoDigitar('fahrenheit')"
+                        :value="fahrenheit.display.value"
+                        @input="e => { fahrenheit.onInput(e); aoDigitar('fahrenheit') }"
                         type="text"
                         inputmode="decimal"
-                        placeholder="68.0"
+                        placeholder="68,0"
                         class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 transition"
                         :class="eResultado('fahrenheit') ? 'bg-amber-50 border-amber-300' : 'border-gray-300'"
                     />

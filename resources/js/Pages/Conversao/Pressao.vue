@@ -1,11 +1,13 @@
 <script setup>
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 import { Head } from '@inertiajs/vue3'
 import axios from 'axios'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import CalculadoraCard from '@/Components/CalculadoraCard.vue'
+import { useDecimalInput } from '@/composables/useDecimalInput'
 
-const form = reactive({ bar: '', psi: '' })
+const bar = useDecimalInput({ casas: 2 })
+const psi = useDecimalInput({ casas: 2 })
 const resultado = ref(null)
 const erroGeral = ref('')
 const loading = ref(false)
@@ -13,17 +15,21 @@ const loading = ref(false)
 function aoDigitar(campo) {
     resultado.value = null
     erroGeral.value = ''
-    form[campo === 'bar' ? 'psi' : 'bar'] = ''
+    if (campo === 'bar') psi.reset()
+    else bar.reset()
 }
 
 async function calcular() {
     erroGeral.value = ''
     loading.value = true
     try {
-        const { data } = await axios.post(route('conversao.pressao.calcular'), form)
+        const { data } = await axios.post(route('pressao.calcular'), {
+            bar: bar.numeric.value,
+            psi: psi.numeric.value,
+        })
         resultado.value = data
-        form.bar = parseFloat(data.bar).toFixed(2)
-        form.psi = parseFloat(data.psi).toFixed(2)
+        bar.set(data.bar)
+        psi.set(data.psi)
     } catch (e) {
         const erros = e.response?.data?.errors ?? {}
         erroGeral.value = erros.geral?.[0]
@@ -35,7 +41,8 @@ async function calcular() {
 }
 
 function limpar() {
-    form.bar = form.psi = ''
+    bar.reset()
+    psi.reset()
     resultado.value = null
     erroGeral.value = ''
 }
@@ -60,11 +67,11 @@ function eResultado(campo) {
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">BAR</label>
                     <input
-                        v-model="form.bar"
-                        @input="aoDigitar('bar')"
+                        :value="bar.display.value"
+                        @input="(e) => { bar.onInput(e); aoDigitar('bar') }"
                         type="text"
                         inputmode="decimal"
-                        placeholder="1.00"
+                        placeholder="1,00"
                         class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 transition"
                         :class="eResultado('bar') ? 'bg-amber-50 border-amber-300' : 'border-gray-300'"
                     />
@@ -73,11 +80,11 @@ function eResultado(campo) {
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">PSI</label>
                     <input
-                        v-model="form.psi"
-                        @input="aoDigitar('psi')"
+                        :value="psi.display.value"
+                        @input="(e) => { psi.onInput(e); aoDigitar('psi') }"
                         type="text"
                         inputmode="decimal"
-                        placeholder="14.50"
+                        placeholder="14,50"
                         class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 transition"
                         :class="eResultado('psi') ? 'bg-amber-50 border-amber-300' : 'border-gray-300'"
                     />

@@ -1,23 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ConversaoTemperaturaRequest extends FormRequest
+class PressaoRequest extends FormRequest
 {
     public function rules(): array
     {
         return [
-            'celsius'    => 'nullable|numeric|between:-273,1000',
-            'fahrenheit' => 'nullable|numeric|between:-459,2000',
+            'bar' => 'nullable|numeric|min:0',
+            'psi' => 'nullable|numeric|min:0',
         ];
     }
 
     public function withValidator($validator): void
     {
         $validator->after(function ($validator) {
-            $preenchidos = collect(['celsius', 'fahrenheit'])
+            $preenchidos = collect(['bar', 'psi'])
                 ->filter(fn($f) => $this->filled($f))
                 ->count();
 
@@ -33,6 +35,7 @@ class ConversaoTemperaturaRequest extends FormRequest
     {
         return [
             '*.numeric' => 'O valor informado não é válido.',
+            '*.min'     => 'O valor não pode ser negativo.',
         ];
     }
 }

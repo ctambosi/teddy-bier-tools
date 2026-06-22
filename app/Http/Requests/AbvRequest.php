@@ -1,7 +1,12 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Http\Requests;
+
 use Illuminate\Foundation\Http\FormRequest;
-class CalculoAbvRequest extends FormRequest
+
+class AbvRequest extends FormRequest
 {
     public function rules(): array
     {
@@ -10,6 +15,7 @@ class CalculoAbvRequest extends FormRequest
             'fg' => 'required|numeric|between:0.8,1.4',
         ];
     }
+
     public function messages(): array
     {
         return [

@@ -115,7 +115,7 @@ async function calcular() {
             altura_liquido: alturaLiquidoFinal,
             perda:          form.perda || undefined,
         }
-        const { data } = await axios.post(route('calculo.volume-mosto.calcular'), payload)
+        const { data } = await axios.post(route('volume-mosto.calcular'), payload)
         resultado.value = data
     } catch (e) {
         erros.value = e.response?.data?.errors ?? { _geral: 'Erro ao calcular. Verifique os valores.' }

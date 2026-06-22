@@ -1,20 +1,26 @@
 <script setup>
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 import { Head } from '@inertiajs/vue3'
 import axios from 'axios'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import CalculadoraCard from '@/Components/CalculadoraCard.vue'
+import { useDecimalInput } from '@/composables/useDecimalInput'
 
-const form = reactive({ ebc: '', srm: '', lovibond: '' })
-const resultado = ref(null)
-const erroGeral = ref('')
-const loading = ref(false)
+const ebc      = useDecimalInput()
+const srm      = useDecimalInput()
+const lovibond = useDecimalInput()
+
+const campos = { ebc, srm, lovibond }
+
+const resultado  = ref(null)
+const erroGeral  = ref('')
+const loading    = ref(false)
 
 function aoDigitar(campo) {
     resultado.value = null
     erroGeral.value = ''
     for (const c of ['ebc', 'srm', 'lovibond']) {
-        if (c !== campo) form[c] = ''
+        if (c !== campo) campos[c].reset()
     }
 }
 
@@ -22,11 +28,15 @@ async function calcular() {
     erroGeral.value = ''
     loading.value = true
     try {
-        const { data } = await axios.post(route('conversao.cor.calcular'), form)
+        const { data } = await axios.post(route('cor.calcular'), {
+            ebc:      ebc.numeric.value,
+            srm:      srm.numeric.value,
+            lovibond: lovibond.numeric.value,
+        })
         resultado.value = data
-        form.ebc      = parseFloat(data.ebc).toFixed(1)
-        form.srm      = parseFloat(data.srm).toFixed(1)
-        form.lovibond = parseFloat(data.lovibond).toFixed(1)
+        ebc.set(data.ebc)
+        srm.set(data.srm)
+        lovibond.set(data.lovibond)
     } catch (e) {
         const erros = e.response?.data?.errors ?? {}
         erroGeral.value = erros.geral?.[0]
@@ -38,7 +48,9 @@ async function calcular() {
 }
 
 function limpar() {
-    form.ebc = form.srm = form.lovibond = ''
+    ebc.reset()
+    srm.reset()
+    lovibond.reset()
     resultado.value = null
     erroGeral.value = ''
 }
@@ -63,11 +75,11 @@ function eResultado(campo) {
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">EBC</label>
                     <input
-                        v-model="form.ebc"
-                        @input="aoDigitar('ebc')"
+                        :value="ebc.display.value"
+                        @input="(e) => { ebc.onInput(e); aoDigitar('ebc') }"
                         type="text"
-                        inputmode="decimal"
-                        placeholder="8.0"
+                        inputmode="numeric"
+                        placeholder="8,0"
                         class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 transition"
                         :class="eResultado('ebc') ? 'bg-amber-50 border-amber-300' : 'border-gray-300'"
                     />
@@ -76,11 +88,11 @@ function eResultado(campo) {
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">SRM</label>
                     <input
-                        v-model="form.srm"
-                        @input="aoDigitar('srm')"
+                        :value="srm.display.value"
+                        @input="(e) => { srm.onInput(e); aoDigitar('srm') }"
                         type="text"
-                        inputmode="decimal"
-                        placeholder="4.1"
+                        inputmode="numeric"
+                        placeholder="4,1"
                         class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 transition"
                         :class="eResultado('srm') ? 'bg-amber-50 border-amber-300' : 'border-gray-300'"
                     />
@@ -89,11 +101,11 @@ function eResultado(campo) {
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Lovibond</label>
                     <input
-                        v-model="form.lovibond"
-                        @input="aoDigitar('lovibond')"
+                        :value="lovibond.display.value"
+                        @input="(e) => { lovibond.onInput(e); aoDigitar('lovibond') }"
                         type="text"
-                        inputmode="decimal"
-                        placeholder="3.3"
+                        inputmode="numeric"
+                        placeholder="3,3"
                         class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 transition"
                         :class="eResultado('lovibond') ? 'bg-amber-50 border-amber-300' : 'border-gray-300'"
                     />

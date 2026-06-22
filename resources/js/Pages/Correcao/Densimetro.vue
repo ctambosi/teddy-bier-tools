@@ -5,12 +5,13 @@ import axios from 'axios'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import CalculadoraCard from '@/Components/CalculadoraCard.vue'
 import SgInput from '@/Components/SgInput.vue'
+import { useDecimalInput } from '@/composables/useDecimalInput'
 
 const form = reactive({
-    sg:          '',
-    temperatura: '',
-    calibracao:  '20',
+    sg:        '',
+    calibracao: '20',
 })
+const temperatura = useDecimalInput()
 const resultado = ref(null)
 const erroGeral = ref('')
 const loading = ref(false)
@@ -20,7 +21,11 @@ async function calcular() {
     resultado.value = null
     loading.value = true
     try {
-        const { data } = await axios.post(route('correcao.densimetro.calcular'), form)
+        const { data } = await axios.post(route('densimetro.calcular'), {
+            sg:          form.sg,
+            temperatura: temperatura.numeric.value,
+            calibracao:  form.calibracao,
+        })
         resultado.value = parseFloat(data.sg_corrigido).toFixed(3)
     } catch (e) {
         const erros = e.response?.data?.errors ?? {}
@@ -33,8 +38,9 @@ async function calcular() {
 }
 
 function limpar() {
-    form.sg = form.temperatura = ''
+    form.sg = ''
     form.calibracao = '20'
+    temperatura.reset()
     resultado.value = null
     erroGeral.value = ''
 }
@@ -71,10 +77,11 @@ function limpar() {
                         Temperatura da amostra (°C)
                     </label>
                     <input
-                        v-model="form.temperatura"
+                        :value="temperatura.display.value"
+                        @input="temperatura.onInput"
                         type="text"
-                        inputmode="decimal"
-                        placeholder="25"
+                        inputmode="numeric"
+                        placeholder="25,0"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 transition"
                     />
                 </div>

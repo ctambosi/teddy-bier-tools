@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CorrecaoDensimetroRequest extends FormRequest
+class DensimetroRequest extends FormRequest
 {
     public function rules(): array
     {
         return [
-            'sg'         => 'required|numeric|between:0.8,1.4',
+            'sg'          => 'required|numeric|between:0.8,1.4',
             'temperatura' => 'required|numeric|between:-10,100',
             'calibracao'  => 'required|in:15,20',
         ];

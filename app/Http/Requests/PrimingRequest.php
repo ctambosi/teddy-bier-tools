@@ -1,19 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CalculoPrimingRequest extends FormRequest
+class PrimingRequest extends FormRequest
 {
     public function rules(): array
     {
         return [
-            'volume_litros'      => 'required|numeric|min:0.1|max:10000',
-            'temp_fermentacao'   => 'required|numeric|between:-5,35',
-            'target_co2'         => 'required|numeric|between:0.5,5',
-            'tipo_acucar'        => 'required|in:sucrose,dextrose_mono,dextrose_anidra,dme,mel',
-            'volume_solucao_ml'  => 'nullable|numeric|min:1|max:100000',
+            'volume_litros'     => 'required|numeric|min:0.1|max:10000',
+            'temp_fermentacao'  => 'required|numeric|between:-5,35',
+            'target_co2'        => 'required|numeric|between:0.5,5',
+            'tipo_acucar'       => 'required|in:sucrose,dextrose_mono,dextrose_anidra,dme,mel',
+            'volume_solucao_ml' => 'nullable|numeric|min:1|max:100000',
         ];
     }
 

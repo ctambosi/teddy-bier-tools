@@ -1,7 +1,12 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Http\Requests;
+
 use Illuminate\Foundation\Http\FormRequest;
-class CalculoPercentualAcucarRequest extends FormRequest
+
+class PercentualAcucarRequest extends FormRequest
 {
     public function rules(): array
     {
@@ -10,6 +15,7 @@ class CalculoPercentualAcucarRequest extends FormRequest
             'percentual' => 'required|numeric|between:0.1,100',
         ];
     }
+
     public function messages(): array
     {
         return [

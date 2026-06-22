@@ -1,18 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CalculoDiluicaoAlcoolicaRequest extends FormRequest
+class DiluicaoAlcoolicaRequest extends FormRequest
 {
     public function rules(): array
     {
         return [
-            'quantidade'        => 'required|numeric|min:0.001',
-            'graduacao_alcool'  => 'required|numeric|between:0.1,100',
-            'graduacao_desejada'=> 'required|numeric|between:0.1,100',
-            'unidade'           => 'required|in:ml,L',
+            'quantidade'         => 'required|numeric|min:0.001',
+            'graduacao_alcool'   => 'required|numeric|between:0.1,100',
+            'graduacao_desejada' => 'required|numeric|between:0.1,100',
+            'unidade'            => 'required|in:ml,L',
         ];
     }
 

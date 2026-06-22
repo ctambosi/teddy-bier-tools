@@ -1,7 +1,12 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Http\Requests;
+
 use Illuminate\Foundation\Http\FormRequest;
-class CalculoLeveduraRequest extends FormRequest
+
+class LeveduraRequest extends FormRequest
 {
     public function rules(): array
     {
@@ -10,6 +15,7 @@ class CalculoLeveduraRequest extends FormRequest
             'concentracao' => 'required|numeric|min:0.1|max:10',
         ];
     }
+
     public function messages(): array
     {
         return [

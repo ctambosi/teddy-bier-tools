@@ -1,20 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CalculoMotorRequest extends FormRequest
+class MotorRequest extends FormRequest
 {
     public function rules(): array
     {
         return [
-            'n1'        => 'nullable|numeric|min:1|max:100000',
-            'd1'        => 'nullable|numeric|min:1|max:10000',
-            'n2'        => 'nullable|numeric|min:1|max:100000',
-            'd2'        => 'nullable|numeric|min:1|max:10000',
-            'unidade_d1'=> 'required|in:mm,cm',
-            'unidade_d2'=> 'required|in:mm,cm',
+            'n1'         => 'nullable|numeric|min:1|max:100000',
+            'd1'         => 'nullable|numeric|min:1|max:10000',
+            'n2'         => 'nullable|numeric|min:1|max:100000',
+            'd2'         => 'nullable|numeric|min:1|max:10000',
+            'unidade_d1' => 'required|in:mm,cm',
+            'unidade_d2' => 'required|in:mm,cm',
         ];
     }
 

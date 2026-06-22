@@ -1,11 +1,13 @@
 <script setup>
-import { reactive, ref, computed } from 'vue'
+import { ref, computed } from 'vue'
 import { Head } from '@inertiajs/vue3'
 import axios from 'axios'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import CalculadoraCard from '@/Components/CalculadoraCard.vue'
+import { useDecimalInput } from '@/composables/useDecimalInput'
 
-const form = reactive({ volume_co2: '', temperatura: '' })
+const volumeCo2 = useDecimalInput()
+const temperatura = useDecimalInput()
 const resultado = ref(null)
 const erroGeral = ref('')
 const loading = ref(false)
@@ -18,7 +20,10 @@ async function calcular() {
     resultado.value = null
     loading.value = true
     try {
-        const { data } = await axios.post(route('correcao.pressao-temperatura.calcular'), form)
+        const { data } = await axios.post(route('pressao-temperatura.calcular'), {
+            volume_co2: volumeCo2.numeric.value,
+            temperatura: temperatura.numeric.value,
+        })
         resultado.value = {
             bar: parseFloat(data.bar).toFixed(2),
             psi: Math.round(parseFloat(data.psi)),
@@ -35,7 +40,8 @@ async function calcular() {
 }
 
 function limpar() {
-    form.volume_co2 = form.temperatura = ''
+    volumeCo2.reset()
+    temperatura.reset()
     resultado.value = null
     erroGeral.value = ''
 }
@@ -60,10 +66,11 @@ function limpar() {
                         Volume de CO₂ desejado (vols)
                     </label>
                     <input
-                        v-model="form.volume_co2"
+                        :value="volumeCo2.display.value"
+                        @input="volumeCo2.onInput"
                         type="text"
-                        inputmode="decimal"
-                        placeholder="2.4"
+                        inputmode="numeric"
+                        placeholder="2,4"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 transition"
                     />
                     <p class="mt-1 text-xs text-gray-400">
@@ -77,10 +84,11 @@ function limpar() {
                         Temperatura da cerveja (°C)
                     </label>
                     <input
-                        v-model="form.temperatura"
+                        :value="temperatura.display.value"
+                        @input="temperatura.onInput"
                         type="text"
-                        inputmode="decimal"
-                        placeholder="2"
+                        inputmode="numeric"
+                        placeholder="2,0"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 transition"
                     />
                     <p class="mt-1 text-xs text-gray-400">Temperatura real do líquido no barril/keg</p>

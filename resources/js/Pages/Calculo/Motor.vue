@@ -54,7 +54,7 @@ async function calcular() {
 
     loading.value = true
     try {
-        const { data } = await axios.post(route('calculo.motor.calcular'), {
+        const { data } = await axios.post(route('motor.calcular'), {
             n1: form.n1 || null,
             d1: form.d1 || null,
             n2: form.n2 || null,

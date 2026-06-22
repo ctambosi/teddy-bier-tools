@@ -46,7 +46,7 @@ async function calcular() {
     try {
         const payload = { ...form }
         if (!payload.volume_solucao_ml) delete payload.volume_solucao_ml
-        const { data } = await axios.post(route('calculo.priming.calcular'), payload)
+        const { data } = await axios.post(route('priming.calcular'), payload)
         resultado.value = data
     } catch (e) {
         erros.value = e.response?.data?.errors ?? {}

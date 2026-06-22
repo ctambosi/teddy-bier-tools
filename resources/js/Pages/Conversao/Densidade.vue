@@ -5,30 +5,48 @@ import axios from 'axios'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import CalculadoraCard from '@/Components/CalculadoraCard.vue'
 import SgInput from '@/Components/SgInput.vue'
+import { useDecimalInput } from '@/composables/useDecimalInput'
 
-const form = reactive({ sg: '', brix: '', plato: '' })
+const form = reactive({ sg: '' })
+const brix = useDecimalInput()
+const plato = useDecimalInput()
 const resultado = ref(null)
 const erroGeral = ref('')
 const loading = ref(false)
 
-// Ao digitar em um campo, limpa os outros para garantir apenas 1 preenchido
 function aoDigitar(campo) {
     resultado.value = null
     erroGeral.value = ''
-    for (const c of ['sg', 'brix', 'plato']) {
-        if (c !== campo) form[c] = ''
-    }
+    if (campo !== 'sg') form.sg = ''
+    if (campo !== 'brix') brix.reset()
+    if (campo !== 'plato') plato.reset()
+}
+
+function aoDigitarBrix(e) {
+    brix.onInput(e)
+    aoDigitar('brix')
+}
+
+function aoDigitarPlato(e) {
+    plato.onInput(e)
+    aoDigitar('plato')
 }
 
 async function calcular() {
     erroGeral.value = ''
     loading.value = true
     try {
-        const { data } = await axios.post(route('conversao.densidade.calcular'), form)
+        const { data } = await axios.post(route('densidade.calcular'), {
+            sg: form.sg,
+            brix: brix.numeric.value,
+            plato: plato.numeric.value,
+        })
         resultado.value = data
-        form.sg    = parseFloat(data.sg).toFixed(3)
-        form.brix  = parseFloat(data.brix).toFixed(1)
-        form.plato = parseFloat(data.plato).toFixed(1)
+        form.sg = parseFloat(data.sg).toFixed(3)
+        brix.display.value = String(parseFloat(data.brix).toFixed(1)).replace('.', ',')
+        brix.numeric.value = parseFloat(data.brix).toFixed(1)
+        plato.display.value = String(parseFloat(data.plato).toFixed(1)).replace('.', ',')
+        plato.numeric.value = parseFloat(data.plato).toFixed(1)
     } catch (e) {
         const erros = e.response?.data?.errors ?? {}
         erroGeral.value = erros.geral?.[0]
@@ -40,7 +58,9 @@ async function calcular() {
 }
 
 function limpar() {
-    form.sg = form.brix = form.plato = ''
+    form.sg = ''
+    brix.reset()
+    plato.reset()
     resultado.value = null
     erroGeral.value = ''
 }
@@ -82,11 +102,11 @@ function eResultado(campo) {
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Brix</label>
                     <input
-                        v-model="form.brix"
-                        @input="aoDigitar('brix')"
+                        :value="brix.display.value"
+                        @input="aoDigitarBrix"
                         type="text"
-                        inputmode="decimal"
-                        placeholder="12.0"
+                        inputmode="numeric"
+                        placeholder="12,0"
                         class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 transition"
                         :class="eResultado('brix') ? 'bg-amber-50 border-amber-300' : 'border-gray-300'"
                     />
@@ -96,11 +116,11 @@ function eResultado(campo) {
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Plato (°P)</label>
                     <input
-                        v-model="form.plato"
-                        @input="aoDigitar('plato')"
+                        :value="plato.display.value"
+                        @input="aoDigitarPlato"
                         type="text"
-                        inputmode="decimal"
-                        placeholder="11.9"
+                        inputmode="numeric"
+                        placeholder="11,9"
                         class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 transition"
                         :class="eResultado('plato') ? 'bg-amber-50 border-amber-300' : 'border-gray-300'"
                     />

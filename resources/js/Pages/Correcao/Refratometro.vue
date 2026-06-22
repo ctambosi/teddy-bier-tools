@@ -16,7 +16,7 @@ async function calcular() {
     resultado.value = null
     loading.value = true
     try {
-        const { data } = await axios.post(route('correcao.refratometro.calcular'), form)
+        const { data } = await axios.post(route('refratometro.calcular'), form)
         resultado.value = parseFloat(data.sg_corrigido).toFixed(3)
     } catch (e) {
         const erros = e.response?.data?.errors ?? {}

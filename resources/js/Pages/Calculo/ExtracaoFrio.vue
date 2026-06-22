@@ -15,7 +15,7 @@ async function calcular() {
     resultado.value = null
     loading.value = true
     try {
-        const { data } = await axios.post(route('calculo.extracao-frio.calcular'), form)
+        const { data } = await axios.post(route('extracao-frio.calcular'), form)
         resultado.value = data
     } catch (e) {
         const erros = e.response?.data?.errors ?? {}
