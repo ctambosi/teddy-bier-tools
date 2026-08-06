@@ -1,11 +1,52 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Teddy Bier Tools
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Ferramentas de cálculo para cervejeiros artesanais. Laravel 11 + Vue 3 + Inertia.js + Tailwind CSS 4.
+
+## Início Rápido — Desenvolvimento
+
+### Requisitos
+
+- Docker Engine 20.10+
+- Docker Compose 2.0+
+
+### Subir o ambiente
+
+```bash
+git clone <repo>
+cd teddy-bier-tools
+docker compose up -d
+```
+
+O Compose traz up automaticamente:
+- **PHP-FPM** (app): localhost:9000 (via Nginx)
+- **Nginx**: http://localhost:8010
+- **Vite dev server**: http://localhost:5173 (HMR)
+- **MySQL**: localhost:3307
+- **Redis**: localhost:6380
+
+Dependências PHP e Node serão instaladas automaticamente no primeiro start. Abra http://localhost:8010 no navegador.
+
+**Hot reload:** Alterações em `.vue`, `.css`, `.js` refletem instantaneamente via Vite HMR — não rode `npm run build`.
+
+### Parar e limpar
+
+```bash
+docker compose down
+```
+
+## Deploy em Produção
+
+Para instruções completas de implantação num servidor com Traefik, veja [DEPLOY.md](DEPLOY.md).
+
+Resumo:
+```bash
+# No servidor
+git clone <repo> /srv/teddy-bier-tools
+cd /srv/teddy-bier-tools
+cp .env.example .env.production
+# Edite .env.production com credenciais reais
+docker compose -f compose.yaml -f compose.prod.yaml up -d
+```
 
 ## About Laravel
 

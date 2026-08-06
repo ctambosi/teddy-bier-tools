@@ -22,15 +22,21 @@ Ferramentas de cálculo para cervejeiros artesanais. Laravel 11 + Inertia.js + V
 | `bier_nginx` | 8010 |
 | `bier_mysql` | 3307 (interno: host `mysql`, porta `3306`) |
 | `bier_redis` | 6380 |
+| `bier_node` | 5173 (Vite dev server / HMR) |
 
 ```bash
-docker compose up -d
-docker exec bier_app npm run build        # após mudar Vue/CSS
+docker compose up -d                      # sobe tudo, inclusive o Vite
 docker exec bier_app php artisan migrate
 docker exec bier_app php artisan optimize:clear
 ```
 
-Página em branco → `rm public/hot` e recarregue.
+Todos os containers usam `restart: unless-stopped` — sobem sozinhos quando o Docker inicia.
+
+**Assets:** com o `bier_node` rodando, alterações em `.vue`/`.css` refletem via HMR — **não** rode `npm run build` em desenvolvimento. O `public/hot` (criado pelo Vite) faz o Laravel apontar os assets para `http://localhost:5173`; o container o remove ao parar.
+
+Para produção: `docker exec bier_app npm run build`.
+
+Página em branco → `public/hot` órfão (container morto à força). `rm public/hot` e recarregue, ou `docker compose up -d node`.
 
 ## Ferramentas e Services
 

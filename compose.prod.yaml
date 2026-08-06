@@ -1,0 +1,36 @@
+name: bier-prod
+
+services:
+  app:
+    build:
+      target: prod
+    restart: always
+    env_file:
+      - .env.production
+
+  nginx:
+    restart: always
+    networks:
+      - bier_net
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=web"
+      - "traefik.http.routers.bier.rule=Host(`tools.teddybier.com.br`)"
+      - "traefik.http.routers.bier.entrypoints=websecure"
+      - "traefik.http.routers.bier.tls.certresolver=letsencrypt"
+      - "traefik.http.services.bier.loadbalancer.server.port=80"
+    volumes:
+      - ./docker/nginx/prod.conf:/etc/nginx/conf.d/default.conf:ro
+
+  mysql:
+    restart: always
+    env_file:
+      - .env.production
+
+  redis:
+    restart: always
+
+networks:
+  web:
+    external: true
