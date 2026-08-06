@@ -34,8 +34,6 @@ services:
 
   node:
     image: node:20-alpine
-    profiles:
-      - dev
     restart: unless-stopped
     working_dir: /var/www
     volumes:

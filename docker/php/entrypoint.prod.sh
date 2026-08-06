@@ -35,6 +35,9 @@ php artisan route:cache
 echo ">>> Cache de views..."
 php artisan view:cache
 
+# Corrigir permissões dos arquivos de cache de views gerados como root
+chown -R www-data:www-data storage/framework/views 2>/dev/null || true
+
 if [ "$RUN_MIGRATIONS" = "true" ]; then
     echo ">>> Executando migrações..."
     php artisan migrate --force

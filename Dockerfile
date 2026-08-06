@@ -61,16 +61,10 @@ ENTRYPOINT ["entrypoint.sh"]
 # ============================================================================
 FROM base AS prod
 
-RUN mkdir -p /usr/local/etc/php/conf.d && \
-    echo "opcache.enable=1\n" \
-    "opcache.memory_consumption=256\n" \
-    "opcache.interned_strings_buffer=16\n" \
-    "opcache.max_accelerated_files=20000\n" \
-    "opcache.validate_timestamps=0\n" \
-    "opcache.log=/var/log/php/opcache.log\n" \
-    > /usr/local/etc/php/conf.d/opcache.ini
+RUN mkdir -p /usr/local/etc/php/conf.d /var/log/php && \
+    chown www-data:www-data /var/log/php
 
-RUN mkdir -p /var/log/php && chown www-data:www-data /var/log/php
+COPY docker/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
 COPY --from=vendor /var/www/vendor /var/www/vendor
 COPY --from=assets /var/www/public/build /var/www/public/build
@@ -84,3 +78,9 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 
 EXPOSE 9000
 ENTRYPOINT ["entrypoint.sh"]
+
+# ============================================================================
+FROM nginx:alpine AS nginx-prod
+
+COPY docker/nginx/prod.conf /etc/nginx/conf.d/default.conf
+COPY --from=prod /var/www/public /var/www/public
