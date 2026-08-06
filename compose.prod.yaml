@@ -5,6 +5,8 @@ services:
     build:
       target: prod
     restart: always
+    env_file:
+      - .env.production
     networks:
       - bier_net
 
