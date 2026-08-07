@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CorRequest;
+use App\Data\ToolsMetadata;
 use App\Services\CorService;
 use Illuminate\Http\JsonResponse;
 use Inertia\Inertia;
@@ -14,7 +15,11 @@ class CorController extends Controller
 {
     public function show(): Response
     {
-        return Inertia::render('Conversao/Cor');
+        $meta = ToolsMetadata::get('cor');
+
+        return Inertia::render('Conversao/Cor', [
+            'meta' => $meta,
+        ]);
     }
 
     public function calcular(CorRequest $request): JsonResponse

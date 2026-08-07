@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PressaoRequest;
+use App\Data\ToolsMetadata;
 use App\Services\CarbonacaoService;
 use Illuminate\Http\JsonResponse;
 use Inertia\Inertia;
@@ -14,7 +15,11 @@ class PressaoController extends Controller
 {
     public function show(): Response
     {
-        return Inertia::render('Conversao/Pressao');
+        $meta = ToolsMetadata::get('pressao');
+
+        return Inertia::render('Conversao/Pressao', [
+            'meta' => $meta,
+        ]);
     }
 
     public function calcular(PressaoRequest $request): JsonResponse

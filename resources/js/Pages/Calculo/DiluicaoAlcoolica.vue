@@ -1,11 +1,14 @@
 <script setup>
 import { reactive, ref } from 'vue'
-import { Head } from '@inertiajs/vue3'
+import { Head, usePage  } from '@inertiajs/vue3'
 import axios from 'axios'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import CalculadoraCard from '@/Components/CalculadoraCard.vue'
 
 const form = reactive({ quantidade: '', graduacao_alcool: '', graduacao_desejada: '', unidade: 'L' })
+const page = usePage()
+const meta = computed(() => page.props.meta || {})
+
 const resultado = ref(null)
 const erroGeral = ref('')
 const loading = ref(false)
@@ -41,11 +44,11 @@ function fmt(val) {
 </script>
 
 <template>
-    <Head title="Diluição de Álcool" />
+    <Head :title="meta.label" />
     <AppLayout>
         <CalculadoraCard
-            titulo="Diluição de Álcool"
-            descricao="Calcula quanta água adicionar para reduzir a graduação alcoólica."
+            :titulo="meta.label"
+            :descricao="meta.description"
         >
             <div v-if="erroGeral" class="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
                 {{ erroGeral }}

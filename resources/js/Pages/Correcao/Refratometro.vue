@@ -1,12 +1,15 @@
 <script setup>
 import { reactive, ref } from 'vue'
-import { Head } from '@inertiajs/vue3'
+import { Head, usePage  } from '@inertiajs/vue3'
 import axios from 'axios'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import CalculadoraCard from '@/Components/CalculadoraCard.vue'
 import SgInput from '@/Components/SgInput.vue'
 
 const form = reactive({ og: '', leitura_atual: '' })
+const page = usePage()
+const meta = computed(() => page.props.meta || {})
+
 const resultado = ref(null)
 const erroGeral = ref('')
 const loading = ref(false)
@@ -36,11 +39,11 @@ function limpar() {
 </script>
 
 <template>
-    <Head title="Correção de Refratômetro" />
+    <Head :title="meta.label" />
     <AppLayout>
         <CalculadoraCard
-            titulo="Correção de Refratômetro"
-            descricao="Corrige a leitura do refratômetro durante a fermentação (fórmula de Novotný)."
+            :titulo="meta.label"
+            :descricao="meta.description"
         >
             <!-- Explicação compacta -->
             <div class="mb-4 p-3 rounded-lg bg-blue-50 border border-blue-200 text-blue-700 text-xs leading-relaxed">

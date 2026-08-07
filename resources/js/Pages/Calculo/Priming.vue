@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, ref } from 'vue'
-import { Head } from '@inertiajs/vue3'
+import { Head, usePage  } from '@inertiajs/vue3'
 import axios from 'axios'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import CalculadoraCard from '@/Components/CalculadoraCard.vue'
@@ -30,6 +30,9 @@ const form = reactive({
     tipo_acucar:      'sucrose',
     volume_solucao_ml: '',
 })
+
+const page = usePage()
+const meta = computed(() => page.props.meta || {})
 
 const resultado = ref(null)
 const erros = ref({})
@@ -74,11 +77,11 @@ function erroField(field) {
 </script>
 
 <template>
-    <Head title="Priming" />
+    <Head :title="meta.label" />
     <AppLayout>
         <CalculadoraCard
-            titulo="Cálculo de Priming"
-            descricao="Calcula a quantidade de açúcar para carbonatação em garrafa ou barril, com correção por CO₂ residual da temperatura."
+            :titulo="meta.label"
+            :descricao="meta.description"
         >
             <!-- Erro geral -->
             <div v-if="erros._geral" class="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">

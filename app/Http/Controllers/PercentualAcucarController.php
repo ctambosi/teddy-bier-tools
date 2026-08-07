@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PercentualAcucarRequest;
+use App\Data\ToolsMetadata;
 use App\Services\LeveduraService;
 use Illuminate\Http\JsonResponse;
 use Inertia\Inertia;
@@ -14,7 +15,11 @@ class PercentualAcucarController extends Controller
 {
     public function show(): Response
     {
-        return Inertia::render('Calculo/PercentualAcucar');
+        $meta = ToolsMetadata::get('percentual-acucar');
+
+        return Inertia::render('Calculo/PercentualAcucar', [
+            'meta' => $meta,
+        ]);
     }
 
     public function calcular(PercentualAcucarRequest $request): JsonResponse

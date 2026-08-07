@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Middleware;
 
+use App\Data\ToolsMetadata;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -37,7 +40,8 @@ class HandleInertiaRequests extends Middleware
     {
         return [
             ...parent::share($request),
-            //
+            'toolsMetadata' => ToolsMetadata::grouped(),
+            'toolMeta' => fn() => ToolsMetadata::all(),
         ];
     }
 }

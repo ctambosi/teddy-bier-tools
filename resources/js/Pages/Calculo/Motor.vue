@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, ref, computed } from 'vue'
-import { Head } from '@inertiajs/vue3'
+import { Head, usePage  } from '@inertiajs/vue3'
 import axios from 'axios'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import CalculadoraCard from '@/Components/CalculadoraCard.vue'
@@ -13,6 +13,9 @@ const form = reactive({
     d2: '',
     unidade_d2: 'mm',
 })
+
+const page = usePage()
+const meta = computed(() => page.props.meta || {})
 
 const resultado = ref(null)
 const erroGeral = ref('')
@@ -88,11 +91,11 @@ function limpar() {
 </script>
 
 <template>
-    <Head title="Motorizar Moedor" />
+    <Head :title="meta.label" />
     <AppLayout>
         <CalculadoraCard
-            titulo="Motorizar Moedor"
-            descricao="Calcula a variável faltante na equação de polias: n₁ × D₁ = n₂ × D₂. Preencha três dos quatro campos."
+            :titulo="meta.label"
+            :descricao="meta.description"
         >
             <!-- Dica -->
             <div class="mb-5 p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800 space-y-1">

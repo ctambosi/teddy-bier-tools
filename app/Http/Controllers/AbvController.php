@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AbvRequest;
+use App\Data\ToolsMetadata;
 use App\Services\AlcoolService;
 use Illuminate\Http\JsonResponse;
 use Inertia\Inertia;
@@ -14,7 +15,11 @@ class AbvController extends Controller
 {
     public function show(): Response
     {
-        return Inertia::render('Calculo/Abv');
+        $meta = ToolsMetadata::get('abv');
+
+        return Inertia::render('Calculo/Abv', [
+            'meta' => $meta,
+        ]);
     }
 
     public function calcular(AbvRequest $request): JsonResponse

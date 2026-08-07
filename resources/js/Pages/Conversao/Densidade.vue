@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, ref } from 'vue'
-import { Head } from '@inertiajs/vue3'
+import { Head, usePage  } from '@inertiajs/vue3'
 import axios from 'axios'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import CalculadoraCard from '@/Components/CalculadoraCard.vue'
@@ -8,6 +8,9 @@ import SgInput from '@/Components/SgInput.vue'
 import { useDecimalInput } from '@/composables/useDecimalInput'
 
 const form = reactive({ sg: '' })
+const page = usePage()
+const meta = computed(() => page.props.meta || {})
+
 const brix = useDecimalInput()
 const plato = useDecimalInput()
 const resultado = ref(null)
@@ -71,11 +74,11 @@ function eResultado(campo) {
 </script>
 
 <template>
-    <Head title="Conversão de Densidade" />
+    <Head :title="meta.label" />
     <AppLayout>
         <CalculadoraCard
-            titulo="Conversão de Densidade"
-            descricao="Preencha um dos campos e clique em Calcular."
+            :titulo="meta.label"
+            :descricao="meta.description"
         >
             <!-- Alerta de erro geral -->
             <div v-if="erroGeral" class="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">

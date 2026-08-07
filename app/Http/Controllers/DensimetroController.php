@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Data\ToolsMetadata;
 use App\Http\Requests\DensimetroRequest;
 use App\Services\DensidadeService;
 use Illuminate\Http\JsonResponse;
@@ -14,7 +15,11 @@ class DensimetroController extends Controller
 {
     public function show(): Response
     {
-        return Inertia::render('Correcao/Densimetro');
+        $meta = ToolsMetadata::get('densimetro');
+
+        return Inertia::render('Correcao/Densimetro', [
+            'meta' => $meta,
+        ]);
     }
 
     public function calcular(DensimetroRequest $request): JsonResponse

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Data\ToolsMetadata;
 use App\Http\Requests\PressaoTemperaturaRequest;
 use App\Services\CarbonacaoService;
 use Illuminate\Http\JsonResponse;
@@ -14,7 +15,11 @@ class PressaoTemperaturaController extends Controller
 {
     public function show(): Response
     {
-        return Inertia::render('Correcao/PressaoTemperatura');
+        $meta = ToolsMetadata::get('pressao-temperatura');
+
+        return Inertia::render('Correcao/PressaoTemperatura', [
+            'meta' => $meta,
+        ]);
     }
 
     public function calcular(PressaoTemperaturaRequest $request): JsonResponse
