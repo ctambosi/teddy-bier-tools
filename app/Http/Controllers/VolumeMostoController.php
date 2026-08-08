@@ -17,7 +17,7 @@ class VolumeMostoController extends Controller
     {
         $meta = ToolsMetadata::get('volume-mosto');
 
-        return Inertia::render('Calculo/VolumeMosto', [
+        return Inertia::render('VolumeMosto', [
             'meta' => $meta,
         ]);
     }

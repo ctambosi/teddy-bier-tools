@@ -17,7 +17,7 @@ class PressaoTemperaturaController extends Controller
     {
         $meta = ToolsMetadata::get('pressao-temperatura');
 
-        return Inertia::render('Correcao/PressaoTemperatura', [
+        return Inertia::render('PressaoTemperatura', [
             'meta' => $meta,
         ]);
     }

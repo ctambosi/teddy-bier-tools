@@ -17,7 +17,7 @@ class RefratometroController extends Controller
     {
         $meta = ToolsMetadata::get('refratometro');
 
-        return Inertia::render('Correcao/Refratometro', [
+        return Inertia::render('Refratometro', [
             'meta' => $meta,
         ]);
     }
