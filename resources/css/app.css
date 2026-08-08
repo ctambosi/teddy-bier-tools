@@ -6,4 +6,74 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /* Marca: terracota/dourado ancorado na cor da logo (#803B34) */
+    --color-amber-50: #fbf1e7;
+    --color-amber-100: #f6e0cc;
+    --color-amber-200: #eac29d;
+    --color-amber-300: #db9e6e;
+    --color-amber-400: #c97c4c;
+    --color-amber-500: #a85a3b;
+    --color-amber-600: #803b34;
+    --color-amber-700: #6b322b;
+    --color-amber-800: #562822;
+    --color-amber-900: #3f1d19;
+    --color-amber-950: #26110f;
+
+    /* Neutro quente (base stone), 50/100 mais saturados para virar o fundo creme */
+    --color-gray-50: #f8efe2;
+    --color-gray-100: #f0e6d6;
+    --color-gray-200: #e7e5e4;
+    --color-gray-300: #d6d3d1;
+    --color-gray-400: #a8a29e;
+    --color-gray-500: #78716c;
+    --color-gray-600: #57534e;
+    --color-gray-700: #44403c;
+    --color-gray-800: #292524;
+    --color-gray-900: #1c1917;
+    --color-gray-950: #0c0a09;
+
+    /* Erro: vinho/terracota escuro, distinto do amber de marca */
+    --color-red-50: #fbedea;
+    --color-red-100: #f5d8d0;
+    --color-red-200: #e9b6a9;
+    --color-red-300: #db9583;
+    --color-red-400: #c97460;
+    --color-red-500: #ac5a44;
+    --color-red-600: #8b4130;
+    --color-red-700: #713528;
+    --color-red-800: #5a2b21;
+    --color-red-900: #46221a;
+
+    /* Sucesso: verde-musgo/oliva */
+    --color-green-50: #f2f6ea;
+    --color-green-100: #e3ecd2;
+    --color-green-200: #cbdcac;
+    --color-green-300: #adc784;
+    --color-green-400: #8fb060;
+    --color-green-500: #729545;
+    --color-green-600: #5b7936;
+    --color-green-700: #4a6129;
+    --color-green-800: #3b4d21;
+    --color-green-900: #2f3e1b;
+
+    /* Aviso: mostarda/ocre */
+    --color-yellow-50: #faf3e0;
+    --color-yellow-100: #f3e4bf;
+    --color-yellow-200: #e9cd8d;
+    --color-yellow-300: #dcb15c;
+    --color-yellow-400: #cd9836;
+    --color-yellow-600: #a8781f;
+    --color-yellow-700: #86601c;
+    --color-yellow-800: #6b4c1a;
+
+    /* Info: azul-ardósia acinzentado */
+    --color-blue-50: #eef2f4;
+    --color-blue-100: #dbe3e7;
+    --color-blue-200: #b9c8cf;
+    --color-blue-300: #93a8b3;
+    --color-blue-400: #6e8794;
+    --color-blue-600: #4c6270;
+    --color-blue-700: #3d505c;
+    --color-blue-800: #32424c;
 }
