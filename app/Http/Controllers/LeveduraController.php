@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LeveduraRequest;
+use App\Data\ToolsMetadata;
 use App\Services\LeveduraService;
 use Illuminate\Http\JsonResponse;
 use Inertia\Inertia;
@@ -14,7 +15,11 @@ class LeveduraController extends Controller
 {
     public function show(): Response
     {
-        return Inertia::render('Calculo/Levedura');
+        $meta = ToolsMetadata::get('levedura');
+
+        return Inertia::render('Calculo/Levedura', [
+            'meta' => $meta,
+        ]);
     }
 
     public function calcular(LeveduraRequest $request): JsonResponse

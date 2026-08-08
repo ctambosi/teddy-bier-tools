@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\MotorRequest;
+use App\Data\ToolsMetadata;
 use App\Services\EquipamentoService;
 use Illuminate\Http\JsonResponse;
 use Inertia\Inertia;
@@ -14,7 +15,11 @@ class MotorController extends Controller
 {
     public function show(): Response
     {
-        return Inertia::render('Calculo/Motor');
+        $meta = ToolsMetadata::get('motor');
+
+        return Inertia::render('Calculo/Motor', [
+            'meta' => $meta,
+        ]);
     }
 
     public function calcular(MotorRequest $request): JsonResponse

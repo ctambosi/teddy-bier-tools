@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PrimingRequest;
+use App\Data\ToolsMetadata;
 use App\Services\CarbonacaoService;
 use Illuminate\Http\JsonResponse;
 use Inertia\Inertia;
@@ -14,7 +15,11 @@ class PrimingController extends Controller
 {
     public function show(): Response
     {
-        return Inertia::render('Calculo/Priming');
+        $meta = ToolsMetadata::get('priming');
+
+        return Inertia::render('Calculo/Priming', [
+            'meta' => $meta,
+        ]);
     }
 
     public function calcular(PrimingRequest $request): JsonResponse

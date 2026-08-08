@@ -141,6 +141,52 @@ Usa: `Correcao/Densimetro.vue` (1 casa), `Conversao/Pressao.vue` (2 casas) | Can
 - `reactive()` para form, `ref()` para escalares (resultado, loading, erro)
 - `key` obrigatório em `v-for`
 
+## Code Review Obrigatório
+
+**Todas as implementações DEVEM passar por code-review antes de serem consideradas completas.**
+
+### Quando Executar
+
+- ✅ Após implementar uma nova funcionalidade (nova ferramenta de cálculo)
+- ✅ Antes de fazer commit de mudanças em `app/Services/`, `app/Http/Controllers/`, `resources/js/`
+- ✅ Antes de abrir PR para `main`
+
+### Como Executar
+
+```bash
+# Revisar todas as mudanças no branch atual
+/code-review
+
+# Revisar com nível alto (mais detalhado)
+/code-review high
+
+# Revisar PR específica (se já aberta)
+/code-review ultra 123
+```
+
+### O Que o Agent Valida
+
+O agente `code-review-bier-agent` verifica:
+
+**Backend (PHP 8.4):**
+- `declare(strict_types=1)` obrigatório
+- Type hints completos (parâmetros + retorno)
+- Arquitetura: Controller → Service (static) → Cálculos
+- **SG precision: 3 casas decimais, sem arredondamento**
+- Validação sempre em FormRequest (PT-BR)
+- Segurança: logs seguros, validação em boundary
+
+**Frontend (Vue 3 + Inertia):**
+- Vue 3 com `<script setup>` (nunca Options API)
+- Inertia responses (GET → render, POST → json)
+- useDecimalInput para campos decimais PT-BR
+- Componentes reutilizáveis (CalculadoraCard, SgInput)
+
+**Resultado:**
+- ✅ APROVADO — todos os padrões atendidos
+- ⚠️ APROVADO COM RESSALVAS — aprovado após correções automáticas
+- ❌ REJEITADO — violações críticas que precisam correção manual
+
 ## Preferências
 
 - Respostas em **português brasileiro**

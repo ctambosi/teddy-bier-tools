@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, ref, computed } from 'vue'
-import { Head } from '@inertiajs/vue3'
+import { Head, usePage  } from '@inertiajs/vue3'
 import axios from 'axios'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import CalculadoraCard from '@/Components/CalculadoraCard.vue'
@@ -9,6 +9,9 @@ import { usePanelasStore } from '@/stores/panelas.js'
 const store = usePanelasStore()
 
 // ── Panelas ───────────────────────────────────────────────────────────────────
+const page = usePage()
+const meta = computed(() => page.props.meta || {})
+
 const panelaSelecionadaId = ref(null)
 const nomePanela = ref('')
 const editando = ref(false)
@@ -133,11 +136,11 @@ function limpar() {
 </script>
 
 <template>
-    <Head title="Volume de Mosto" />
+    <Head :title="meta.label" />
     <AppLayout>
         <CalculadoraCard
-            titulo="Volume de Mosto"
-            descricao="Calcula o volume de líquido em uma panela cilíndrica a partir das medidas internas."
+            :titulo="meta.label"
+            :descricao="meta.description"
         >
             <!-- ── Gerenciar panelas ─────────────────────────────────────────── -->
             <div class="mb-5 border border-gray-200 rounded-lg overflow-hidden">

@@ -1,6 +1,6 @@
 <script setup>
-import { reactive, ref } from 'vue'
-import { Head } from '@inertiajs/vue3'
+import { computed, reactive, ref } from 'vue'
+import { Head, usePage  } from '@inertiajs/vue3'
 import axios from 'axios'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import CalculadoraCard from '@/Components/CalculadoraCard.vue'
@@ -11,6 +11,9 @@ const form = reactive({
     sg:        '',
     calibracao: '20',
 })
+const page = usePage()
+const meta = computed(() => page.props.meta || {})
+
 const temperatura = useDecimalInput()
 const resultado = ref(null)
 const erroGeral = ref('')
@@ -47,11 +50,11 @@ function limpar() {
 </script>
 
 <template>
-    <Head title="Correção de Densímetro" />
+    <Head :title="meta.label" />
     <AppLayout>
         <CalculadoraCard
-            titulo="Correção de Densímetro"
-            descricao="Corrige a leitura do densímetro em função da temperatura da amostra."
+            :titulo="meta.label"
+            :descricao="meta.description"
         >
             <div v-if="erroGeral" class="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
                 {{ erroGeral }}

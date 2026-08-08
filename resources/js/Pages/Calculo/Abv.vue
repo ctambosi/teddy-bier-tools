@@ -1,12 +1,15 @@
 <script setup>
-import { reactive, ref } from 'vue'
-import { Head } from '@inertiajs/vue3'
+import { computed, reactive, ref } from 'vue'
+import { Head, usePage  } from '@inertiajs/vue3'
 import axios from 'axios'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import CalculadoraCard from '@/Components/CalculadoraCard.vue'
 import SgInput from '@/Components/SgInput.vue'
 
 const form = reactive({ og: '', fg: '' })
+const page = usePage()
+const meta = computed(() => page.props.meta || {})
+
 const resultado = ref(null)
 const erroGeral = ref('')
 const loading = ref(false)
@@ -36,11 +39,11 @@ function limpar() {
 </script>
 
 <template>
-    <Head title="Graduação Alcoólica (ABV)" />
+    <Head :title="meta.label" />
     <AppLayout>
         <CalculadoraCard
-            titulo="Graduação Alcoólica (ABV)"
-            descricao="Calcula o teor alcoólico da cerveja a partir da densidade original e final."
+            :titulo="meta.label"
+            :descricao="meta.description"
         >
             <div v-if="erroGeral" class="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
                 {{ erroGeral }}

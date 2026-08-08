@@ -1,11 +1,14 @@
 <script setup>
-import { reactive, ref } from 'vue'
-import { Head } from '@inertiajs/vue3'
+import { computed, reactive, ref } from 'vue'
+import { Head, usePage  } from '@inertiajs/vue3'
 import axios from 'axios'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import CalculadoraCard from '@/Components/CalculadoraCard.vue'
 
 const form = reactive({ gramas: '' })
+const page = usePage()
+const meta = computed(() => page.props.meta || {})
+
 const resultado = ref(null)
 const erroGeral = ref('')
 const loading = ref(false)
@@ -35,11 +38,11 @@ function limpar() {
 </script>
 
 <template>
-    <Head title="Extração a Frio" />
+    <Head :title="meta.label" />
     <AppLayout>
         <CalculadoraCard
-            titulo="Extração a Frio"
-            descricao="Calcula o volume de água necessário para extração a frio de lúpulo."
+            :titulo="meta.label"
+            :descricao="meta.description"
         >
             <div v-if="erroGeral" class="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
                 {{ erroGeral }}
@@ -57,7 +60,6 @@ function limpar() {
                         placeholder="500"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 transition"
                     />
-                    <p class="mt-1 text-xs text-gray-400">Proporção: 1,9 oz de água por grama de lúpulo</p>
                 </div>
 
                 <div class="flex gap-3 pt-2">
@@ -83,5 +85,59 @@ function limpar() {
                 <p class="text-4xl font-bold text-green-800">{{ resultado.litros }} L</p>
             </div>
         </CalculadoraCard>
+
+        <div class="mt-8 max-w-2xl mx-auto">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Como fazer Cold Steeping</h2>
+            <div class="bg-white rounded-lg shadow p-6 space-y-4">
+                <ol class="space-y-3 list-decimal list-inside">
+                    <li class="text-gray-700">
+                        Moer a quantidade desejada de malte. Pode fazer uma moagem um pouco mais fina do que a moagem comum para mostura, se desejar.
+                    </li>
+                    <li class="text-gray-700">
+                        Utilize um recipiente, preferencialmente de vidro, como uma jarra, becker ou erlenmeyer.
+                    </li>
+                    <li class="text-gray-700">
+                        Coloque o malte e adicione a quantidade de água calculada (filtrada ou fervida e <strong>resfriada</strong>).
+                    </li>
+                    <li class="text-gray-700">
+                        Cubra com papel alumínio ou filme plástico.
+                    </li>
+                    <li class="text-gray-700">
+                        Deixe descansar por 24h. Agite de vez em quando.
+                    </li>
+                    <li class="text-gray-700">
+                        Após 24h, coe a solução para deixar o bagaço para trás. <strong>Sempre cuide com os recipientes e utensílios, para que sejam alimentícios e estejam bem limpos.</strong>
+                    </li>
+                    <li class="text-gray-700">
+                        Se for adicionar na fermentação/maturação, faça uma pasteurização:
+                        <ul class="ml-6 mt-2 space-y-2 list-disc list-inside">
+                            <li>Aqueça a 70ºC e mantenha por 10min.</li>
+                            <li>Resfrie rapidamente (utilizando uma bacia com gelo, por exemplo).</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <div class="mt-6 pt-6 border-t border-gray-200">
+                    <p class="text-gray-700 mb-3">Quer entender os objetivos e procedimentos da extração a frio? Leia:</p>
+                    <ul class="space-y-2">
+                        <li>
+                            <a href="http://beersmith.com/blog/2011/11/17/brewing-beer-with-dark-grains-steeping-versus-mashing/" target="_blank" class="text-amber-600 hover:text-amber-700 underline">
+                                Artigo do Beersmith
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://www.homebrewersassociation.org/how-to-brew/cold-steeping-getting-the-most-out-of-dark-grains/" target="_blank" class="text-amber-600 hover:text-amber-700 underline">
+                                Artigo da AHA
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://www.amazon.com/Brewing-Better-Beer-Advanced-Homebrewers/dp/0937381985" target="_blank" class="text-amber-600 hover:text-amber-700 underline">
+                                Livro Brewing Better Beer
+                            </a> do Gordon Strong
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </AppLayout>
 </template>

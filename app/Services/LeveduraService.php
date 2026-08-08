@@ -20,13 +20,18 @@ class LeveduraService
 
     public static function calcularPercentualAcucar(float $og, float $percentual): array
     {
-        $densidadeDoAcucar = 1 + ($og - 1) * $percentual / 100;
-        $densidadeDoGrist  = 1 + ($og - $densidadeDoAcucar);
+        $pontosOG = $og - 1;
+        $pontosAcucar = $pontosOG * $percentual / 100;
+        $pontosGrist = $pontosOG - $pontosAcucar;
+
+        $densidadeAcucar = 1 + $pontosAcucar;
+        $densidadeGrist = 1 + $pontosGrist;
+        $ogFinal = 1 + $pontosAcucar + $pontosGrist;
 
         return [
-            'densidade_grist'  => $densidadeDoGrist,
-            'densidade_acucar' => $densidadeDoAcucar,
-            'og'               => $og,
+            'densidade_grist'  => $densidadeGrist,
+            'densidade_acucar' => $densidadeAcucar,
+            'og'               => $ogFinal,
         ];
     }
 }

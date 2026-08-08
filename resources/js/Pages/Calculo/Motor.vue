@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, ref, computed } from 'vue'
-import { Head } from '@inertiajs/vue3'
+import { Head, usePage  } from '@inertiajs/vue3'
 import axios from 'axios'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import CalculadoraCard from '@/Components/CalculadoraCard.vue'
@@ -13,6 +13,9 @@ const form = reactive({
     d2: '',
     unidade_d2: 'mm',
 })
+
+const page = usePage()
+const meta = computed(() => page.props.meta || {})
 
 const resultado = ref(null)
 const erroGeral = ref('')
@@ -88,17 +91,26 @@ function limpar() {
 </script>
 
 <template>
-    <Head title="Motorizar Moedor" />
+    <Head :title="meta.label" />
     <AppLayout>
         <CalculadoraCard
-            titulo="Motorizar Moedor"
-            descricao="Calcula a variável faltante na equação de polias: n₁ × D₁ = n₂ × D₂. Preencha três dos quatro campos."
+            :titulo="meta.label"
+            :descricao="meta.description"
         >
             <!-- Dica -->
             <div class="mb-5 p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800 space-y-1">
+                <p>
+                    A velocidade ideal do de rotação do moedor (n₂) é entre <strong>150 e 300 RPM</strong>.<br>
+                    Você pode já ter um motor que queira usar, que tem determinada rotação.
+                    Esse motor pode já ter uma polia embutida.<br>
+                    Ou você pode já ter alguma polia tanto para o motor, quanto para o moedor.<br>
+                    Enfim, o objetivo desta funcionalidade é ajudar a obter uma rotação dentro do ideal utilizando o que
+                    você já tem ou pode comprar.
+                </p>
                 <p class="font-medium">Como usar:</p>
-                <p>Preencha <strong>três</strong> dos quatro campos e deixe o que deseja calcular <strong>em branco</strong>.</p>
-                <p>A velocidade ideal do moedor (n₂) é entre <strong>150 e 300 RPM</strong>.</p>
+                <p>Preencha <strong>três</strong> dos quatro campos e
+                    <strong>deixe o campo que deseja calcular em branco</strong>.</p>
+
             </div>
 
             <div v-if="erroGeral" class="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">

@@ -1,111 +1,31 @@
 <script setup>
-import { Head } from '@inertiajs/vue3'
+import { computed } from 'vue'
+import { Head, usePage } from '@inertiajs/vue3'
 import { route } from 'ziggy-js'
 import AppLayout from '@/Layouts/AppLayout.vue'
 
-const categories = [
-    {
-        title: 'Correções',
-        color: 'amber',
-        icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z',
-        tools: [
-            {
-                label: 'Densímetro',
-                description: 'Corrige a leitura do densímetro em função da temperatura da amostra.',
-                href: route('densimetro'),
-            },
-            {
-                label: 'Refratômetro',
-                description: 'Corrige a leitura do refratômetro após o início da fermentação (fórmula de Novotný).',
-                href: route('refratometro'),
-            },
-            {
-                label: 'Pressão × Temperatura',
-                description: 'Calcula a pressão necessária para carbonatação forçada (serving pressure).',
-                href: route('pressao-temperatura'),
-            },
-        ],
-    },
-    {
-        title: 'Conversões',
-        color: 'blue',
-        icon: 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4',
-        tools: [
-            {
-                label: 'Densidade',
-                description: 'Converte entre SG, Brix e Plato em ambas as direções.',
-                href: route('densidade'),
-            },
-            {
-                label: 'Temperatura',
-                description: 'Converte entre graus Celsius e Fahrenheit.',
-                href: route('temperatura'),
-            },
-            {
-                label: 'Cor',
-                description: 'Converte entre EBC, SRM e Lovibond.',
-                href: route('cor'),
-            },
-            {
-                label: 'Pressão',
-                description: 'Converte entre BAR e PSI.',
-                href: route('pressao'),
-            },
-        ],
-    },
-    {
-        title: 'Cálculos',
-        color: 'green',
-        icon: 'M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 11h.01M12 11h.01M15 11h.01M4 19h16a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z',
-        tools: [
-            {
-                label: 'Graduação Alcoólica (ABV)',
-                description: 'Calcula o teor alcoólico a partir da OG e FG.',
-                href: route('abv'),
-            },
-            {
-                label: 'Priming',
-                description: 'Calcula o açúcar de priming com correção por CO₂ residual e distribuição por garrafa.',
-                href: route('priming'),
-            },
-            {
-                label: 'Volume de Mosto',
-                description: 'Calcula o volume de líquido em uma panela cilíndrica. Salva suas panelas localmente.',
-                href: route('volume-mosto'),
-            },
-            {
-                label: 'Levedura por Peso',
-                description: 'Calcula a quantidade de lama de levedura em gramas para uma pitching rate alvo.',
-                href: route('levedura'),
-            },
-            {
-                label: 'Extração a Frio',
-                description: 'Calcula o volume de água para extração a frio de lúpulo.',
-                href: route('extracao-frio'),
-            },
-            {
-                label: 'Percentual de Açúcar',
-                description: 'Calcula a densidade-alvo do grist dado o percentual de açúcar na receita.',
-                href: route('percentual-acucar'),
-            },
-            {
-                label: 'Diluição de Álcool',
-                description: 'Calcula a água a adicionar para reduzir a graduação alcoólica.',
-                href: route('diluicao-alcoolica'),
-            },
-            {
-                label: 'Adição de Álcool',
-                description: 'Calcula o álcool a adicionar para elevar a graduação de uma base.',
-                href: route('adicao-alcoolica'),
-            },
-            {
-                label: 'Motorizar Moedor',
-                description: 'Calcula a quarta variável da equação de polias: n₁ × D₁ = n₂ × D₂.',
-                href: route('motor'),
-            },
-        ],
-    },
-]
+const page = usePage()
+const toolsMetadata = computed(() => page.props.toolsMetadata || {})
+
+const categoryConfig = {
+    'Correções': { color: 'amber', icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z' },
+    'Conversões': { color: 'blue', icon: 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4' },
+    'Cálculos': { color: 'green', icon: 'M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 11h.01M12 11h.01M15 11h.01M4 19h16a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z' },
+}
+
+const categories = computed(() => {
+    return Object.entries(toolsMetadata.value).map(([categoryName, tools]) => {
+        const config = categoryConfig[categoryName] || { color: 'gray', icon: '' }
+        return {
+            title: categoryName,
+            ...config,
+            tools: Object.entries(tools).map(([key, tool]) => ({
+                ...tool,
+                href: route(key),
+            })),
+        }
+    })
+})
 
 const colorMap = {
     amber: {

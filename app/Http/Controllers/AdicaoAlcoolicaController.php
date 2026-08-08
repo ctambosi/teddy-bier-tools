@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AdicaoAlcoolicaRequest;
+use App\Data\ToolsMetadata;
 use App\Services\AlcoolService;
 use Illuminate\Http\JsonResponse;
 use Inertia\Inertia;
@@ -14,7 +15,11 @@ class AdicaoAlcoolicaController extends Controller
 {
     public function show(): Response
     {
-        return Inertia::render('Calculo/AdicaoAlcoolica');
+        $meta = ToolsMetadata::get('adicao-alcoolica');
+
+        return Inertia::render('Calculo/AdicaoAlcoolica', [
+            'meta' => $meta,
+        ]);
     }
 
     public function calcular(AdicaoAlcoolicaRequest $request): JsonResponse

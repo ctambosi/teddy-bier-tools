@@ -1,11 +1,14 @@
 <script setup>
-import { reactive, ref } from 'vue'
-import { Head } from '@inertiajs/vue3'
+import { computed, reactive, ref } from 'vue'
+import { Head, usePage  } from '@inertiajs/vue3'
 import axios from 'axios'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import CalculadoraCard from '@/Components/CalculadoraCard.vue'
 
 const form = reactive({ volume_base: '', graduacao_alcool: '', graduacao_desejada: '', unidade: 'L' })
+const page = usePage()
+const meta = computed(() => page.props.meta || {})
+
 const resultado = ref(null)
 const erroGeral = ref('')
 const loading = ref(false)
@@ -37,11 +40,11 @@ function limpar() {
 </script>
 
 <template>
-    <Head title="Adição de Álcool" />
+    <Head :title="meta.label" />
     <AppLayout>
         <CalculadoraCard
-            titulo="Adição de Álcool"
-            descricao="Calcula quanto álcool adicionar para elevar a graduação alcoólica de uma base."
+            :titulo="meta.label"
+            :descricao="meta.description"
         >
             <div v-if="erroGeral" class="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
                 {{ erroGeral }}

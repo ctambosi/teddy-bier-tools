@@ -1,12 +1,15 @@
 <script setup>
-import { reactive, ref } from 'vue'
-import { Head } from '@inertiajs/vue3'
+import { computed, reactive, ref } from 'vue'
+import { Head, usePage  } from '@inertiajs/vue3'
 import axios from 'axios'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import CalculadoraCard from '@/Components/CalculadoraCard.vue'
 import SgInput from '@/Components/SgInput.vue'
 
 const form = reactive({ og: '', leitura_atual: '' })
+const page = usePage()
+const meta = computed(() => page.props.meta || {})
+
 const resultado = ref(null)
 const erroGeral = ref('')
 const loading = ref(false)
@@ -36,15 +39,18 @@ function limpar() {
 </script>
 
 <template>
-    <Head title="Correção de Refratômetro" />
+    <Head :title="meta.label" />
     <AppLayout>
         <CalculadoraCard
-            titulo="Correção de Refratômetro"
-            descricao="Corrige a leitura do refratômetro durante a fermentação (fórmula de Novotný)."
+            :titulo="meta.label"
+            :descricao="meta.description"
         >
             <!-- Explicação compacta -->
             <div class="mb-4 p-3 rounded-lg bg-blue-50 border border-blue-200 text-blue-700 text-xs leading-relaxed">
-                <strong>Como usar:</strong> informe a OG (medida antes de inocular a levedura) e a leitura atual do refratômetro — ambas em SG. O álcool produzido durante a fermentação interfere no índice de refração; esta fórmula corrige esse efeito.
+                O álcool produzido durante a fermentação interfere no índice de refração;
+                esta fórmula corrige esse efeito pela fórmula de Novotný.
+                <strong>Como usar:</strong> informe a OG (medida antes de inocular a levedura) e a leitura atual do
+                refratômetro — ambas em SG.
             </div>
 
             <div v-if="erroGeral" class="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">

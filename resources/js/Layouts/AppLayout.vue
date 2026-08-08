@@ -1,47 +1,23 @@
 <script setup>
-import { ref } from 'vue'
-import { Link } from '@inertiajs/vue3'
+import { ref, computed } from 'vue'
+import { Link, usePage } from '@inertiajs/vue3'
 import { route } from 'ziggy-js'
 
+const page = usePage()
 const mobileMenuOpen = ref(false)
 const openDropdown = ref(null)
 
-const navGroups = [
-    {
-        name: 'correcoes',
-        label: 'Correções',
-        links: [
-            { label: 'Densímetro',           href: route('densimetro') },
-            { label: 'Refratômetro',          href: route('refratometro') },
-            { label: 'Pressão × Temperatura', href: route('pressao-temperatura') },
-        ],
-    },
-    {
-        name: 'conversoes',
-        label: 'Conversões',
-        links: [
-            { label: 'Densidade',   href: route('densidade') },
-            { label: 'Temperatura', href: route('temperatura') },
-            { label: 'Cor',         href: route('cor') },
-            { label: 'Pressão',     href: route('pressao') },
-        ],
-    },
-    {
-        name: 'calculos',
-        label: 'Cálculos',
-        links: [
-            { label: 'Graduação Alcoólica (ABV)', href: route('abv') },
-            { label: 'Extração a Frio',           href: route('extracao-frio') },
-            { label: 'Volume de Mosto',           href: route('volume-mosto') },
-            { label: 'Priming',                   href: route('priming') },
-            { label: 'Levedura por Peso',         href: route('levedura') },
-            { label: 'Motorizar Moedor',          href: route('motor') },
-            { label: 'Diluição de Álcool',        href: route('diluicao-alcoolica') },
-            { label: 'Adição de Álcool',          href: route('adicao-alcoolica') },
-            { label: 'Percentual de Açúcar',      href: route('percentual-acucar') },
-        ],
-    },
-]
+const navGroups = computed(() => {
+    const grouped = page.props.toolsMetadata || {}
+    return Object.entries(grouped).map(([categoria, tools]) => ({
+        name: categoria.toLowerCase().replace(/\s+/g, '-'),
+        label: categoria,
+        links: Object.entries(tools).map(([key, tool]) => ({
+            label: tool.label,
+            href: route(key),
+        })),
+    }))
+})
 
 function toggleDropdown(name) {
     openDropdown.value = openDropdown.value === name ? null : name

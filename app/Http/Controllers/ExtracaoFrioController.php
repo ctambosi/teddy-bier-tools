@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ExtracaoFrioRequest;
+use App\Data\ToolsMetadata;
 use App\Services\LeveduraService;
 use Illuminate\Http\JsonResponse;
 use Inertia\Inertia;
@@ -14,7 +15,11 @@ class ExtracaoFrioController extends Controller
 {
     public function show(): Response
     {
-        return Inertia::render('Calculo/ExtracaoFrio');
+        $meta = ToolsMetadata::get('extracao-frio');
+
+        return Inertia::render('Calculo/ExtracaoFrio', [
+            'meta' => $meta,
+        ]);
     }
 
     public function calcular(ExtracaoFrioRequest $request): JsonResponse
