@@ -17,7 +17,7 @@ class AdicaoAlcoolicaController extends Controller
     {
         $meta = ToolsMetadata::get('adicao-alcoolica');
 
-        return Inertia::render('Calculo/AdicaoAlcoolica', [
+        return Inertia::render('AdicaoAlcoolica', [
             'meta' => $meta,
         ]);
     }

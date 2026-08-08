@@ -17,7 +17,7 @@ class DensidadeController extends Controller
     {
         $meta = ToolsMetadata::get('densidade');
 
-        return Inertia::render('Conversao/Densidade', [
+        return Inertia::render('Densidade', [
             'meta' => $meta,
         ]);
     }

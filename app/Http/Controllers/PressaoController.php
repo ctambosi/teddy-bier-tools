@@ -17,7 +17,7 @@ class PressaoController extends Controller
     {
         $meta = ToolsMetadata::get('pressao');
 
-        return Inertia::render('Conversao/Pressao', [
+        return Inertia::render('Pressao', [
             'meta' => $meta,
         ]);
     }
