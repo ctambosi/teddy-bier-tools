@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import { Link, usePage } from '@inertiajs/vue3'
 import { route } from 'ziggy-js'
+import logoUrl from '@/images/logo.png'
 
 const page = usePage()
 const mobileMenuOpen = ref(false)
@@ -38,7 +39,7 @@ function closeDropdowns() {
 
                     <!-- Logo -->
                     <Link href="/" class="flex items-center gap-2 text-white font-bold text-lg hover:text-amber-400 transition-colors">
-                        <span class="text-2xl">🍺</span>
+                        <img :src="logoUrl" alt="Teddy Bier Tools" class="w-8 h-8 rounded-md" />
                         <span class="hidden sm:block">Teddy Bier Tools</span>
                     </Link>
 

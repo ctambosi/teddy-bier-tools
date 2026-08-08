@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { Head, usePage } from '@inertiajs/vue3'
 import { route } from 'ziggy-js'
 import AppLayout from '@/Layouts/AppLayout.vue'
+import logoUrl from '@/images/logo.png'
 
 const page = usePage()
 const toolsMetadata = computed(() => page.props.toolsMetadata || {})
@@ -58,7 +59,7 @@ const colorMap = {
 
         <!-- Hero -->
         <div class="mb-10 text-center py-6">
-            <div class="text-5xl mb-3">🍺</div>
+            <img :src="logoUrl" alt="Teddy Bier Tools" class="w-16 h-16 mx-auto mb-3 rounded-xl" />
             <h1 class="text-3xl font-bold text-gray-900 mb-2">Teddy Bier Tools</h1>
             <p class="text-gray-500 text-base max-w-md mx-auto">
                 Ferramentas de cálculo para produção de cerveja.
