@@ -17,7 +17,7 @@ class AbvController extends Controller
     {
         $meta = ToolsMetadata::get('abv');
 
-        return Inertia::render('Calculo/Abv', [
+        return Inertia::render('Abv', [
             'meta' => $meta,
         ]);
     }

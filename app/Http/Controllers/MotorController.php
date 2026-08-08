@@ -17,7 +17,7 @@ class MotorController extends Controller
     {
         $meta = ToolsMetadata::get('motor');
 
-        return Inertia::render('Calculo/Motor', [
+        return Inertia::render('Motor', [
             'meta' => $meta,
         ]);
     }

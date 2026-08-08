@@ -48,6 +48,7 @@ Um controller por funcionalidade (`show()` GET + `calcular()` POST). Rotas plana
 | `densidade` | `DensidadeController` | SG ↔ Brix ↔ Plato — `calcularDensidade()` |
 | `densimetro` | `DensimetroController` | NBS/NIST: `SG×(fatorNBS(T)/fatorNBS(20°C))` — `corrigirDensimetro()` |
 | `refratometro` | `RefratometroController` | Novotný: `0.00628×CG−0.0025×OG+1.0013` — `corrigirRefratometro()` |
+| `percentual-acucar` | `PercentualAcucarController` | OG sem açúcar dado % — `calcularPercentualAcucar()` |
 
 Fórmula SG→Brix: `((182.4601×SG−775.6821)×SG+1262.7794)×SG−669.5622`
 
@@ -71,10 +72,13 @@ Constante: `PSI_POR_BAR=14.5037738007` | `FATORES_ACUCAR`: sucrose 2.0, dextrose
 | Rota | Controller | Descrição |
 |------|-----------|-----------|
 | `levedura` | `LeveduraController` | `ceil(células×1.087/concentração)` |
-| `extracao-frio` | `ExtracaoFrioController` | `1.9×g/454` L |
-| `percentual-acucar` | `PercentualAcucarController` | OG sem açúcar dado % |
 
 Constante: `CELULAS_POR_GRAMA=1.087`
+
+### ExtracaoService
+| Rota | Controller | Descrição |
+|------|-----------|-----------|
+| `extracao-frio` | `ExtracaoFrioController` | Água por peso de malte p/ extração a frio de maltes escuros — `1.9×g/454` L — `calcularExtracaoFrio()` |
 
 ### EquipamentoService
 | Rota | Controller | Descrição |

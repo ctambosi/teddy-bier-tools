@@ -17,7 +17,7 @@ class PrimingController extends Controller
     {
         $meta = ToolsMetadata::get('priming');
 
-        return Inertia::render('Calculo/Priming', [
+        return Inertia::render('Priming', [
             'meta' => $meta,
         ]);
     }

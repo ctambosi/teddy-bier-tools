@@ -17,7 +17,7 @@ class CorController extends Controller
     {
         $meta = ToolsMetadata::get('cor');
 
-        return Inertia::render('Conversao/Cor', [
+        return Inertia::render('Cor', [
             'meta' => $meta,
         ]);
     }

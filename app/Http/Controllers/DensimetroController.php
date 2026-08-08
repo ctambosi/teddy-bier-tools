@@ -17,7 +17,7 @@ class DensimetroController extends Controller
     {
         $meta = ToolsMetadata::get('densimetro');
 
-        return Inertia::render('Correcao/Densimetro', [
+        return Inertia::render('Densimetro', [
             'meta' => $meta,
         ]);
     }

@@ -17,7 +17,7 @@ class LeveduraController extends Controller
     {
         $meta = ToolsMetadata::get('levedura');
 
-        return Inertia::render('Calculo/Levedura', [
+        return Inertia::render('Levedura', [
             'meta' => $meta,
         ]);
     }

@@ -17,7 +17,7 @@ class TemperaturaController extends Controller
     {
         $meta = ToolsMetadata::get('temperatura');
 
-        return Inertia::render('Conversao/Temperatura', [
+        return Inertia::render('Temperatura', [
             'meta' => $meta,
         ]);
     }
