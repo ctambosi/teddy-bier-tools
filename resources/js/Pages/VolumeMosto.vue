@@ -47,8 +47,7 @@ function salvarPanela() {
     })
 
     if (!editando.value) {
-        const novaId = store.panelas[store.panelas.length - 1]?.id
-        panelaSelecionadaId.value = novaId
+        panelaSelecionadaId.value = store.panelas[store.panelas.length - 1]?.id
     }
     editando.value = false
 }
