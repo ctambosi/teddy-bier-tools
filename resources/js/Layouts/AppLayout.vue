@@ -40,7 +40,7 @@ function closeDropdowns() {
                     <!-- Logo -->
                     <Link href="/" class="flex items-center gap-2 text-white font-bold text-lg hover:text-amber-400 transition-colors">
                         <img :src="logoUrl" alt="Teddy Bier Tools" class="w-8 h-8 rounded-md" />
-                        <span class="hidden sm:block">Teddy Bier Tools</span>
+                        <span>Teddy Bier Tools</span>
                     </Link>
 
                     <!-- Menu desktop -->
