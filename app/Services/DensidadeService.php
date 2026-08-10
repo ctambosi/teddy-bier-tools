@@ -29,7 +29,7 @@ class DensidadeService
     public static function calcularDensidade(array $input): array
     {
         if ($input['sg'] !== null) {
-            $sg = $input['sg'];
+            $sg = (float) $input['sg'];
             return [
                 'sg'              => $sg,
                 'brix'            => self::sgParaBrix($sg),
@@ -39,20 +39,22 @@ class DensidadeService
         }
 
         if ($input['brix'] !== null) {
-            $sg = self::brixParaSg($input['brix']);
+            $brix = (float) $input['brix'];
+            $sg   = self::brixParaSg($brix);
             return [
                 'sg'              => $sg,
-                'brix'            => $input['brix'],
+                'brix'            => $brix,
                 'plato'           => self::sgParaPlato($sg),
                 'campo_informado' => 'brix',
             ];
         }
 
-        $sg = self::platoParaSg($input['plato']);
+        $plato = (float) $input['plato'];
+        $sg    = self::platoParaSg($plato);
         return [
             'sg'              => $sg,
             'brix'            => self::sgParaBrix($sg),
-            'plato'           => $input['plato'],
+            'plato'           => $plato,
             'campo_informado' => 'plato',
         ];
     }
