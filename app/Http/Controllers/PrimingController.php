@@ -24,13 +24,17 @@ class PrimingController extends Controller
 
     public function calcular(PrimingRequest $request): JsonResponse
     {
-        $data      = $request->validated();
+        $data = $request->validated();
+
         $resultado = CarbonacaoService::calcularPriming(
-            (float) $data['volume_litros'],
-            (float) $data['temp_fermentacao'],
-            (float) $data['target_co2'],
+            $data['modo'],
             $data['tipo_acucar'],
-            isset($data['volume_solucao_ml']) ? (float) $data['volume_solucao_ml'] : null
+            isset($data['volume_litros']) ? (float) $data['volume_litros'] : null,
+            isset($data['gramas_por_litro']) ? (float) $data['gramas_por_litro'] : null,
+            isset($data['target_co2']) ? (float) $data['target_co2'] : null,
+            isset($data['temp_fermentacao']) ? (float) $data['temp_fermentacao'] : null,
+            isset($data['volume_solucao_inicial_ml']) ? (float) $data['volume_solucao_inicial_ml'] : null,
+            isset($data['volume_solucao_final_ml']) ? (float) $data['volume_solucao_final_ml'] : null
         );
 
         return response()->json($resultado);

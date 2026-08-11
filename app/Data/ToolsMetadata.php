@@ -54,7 +54,7 @@ class ToolsMetadata
             'priming' => [
                 'label' => 'Priming',
                 'description' =>
-                    'Calcula o açúcar de priming com correção por CO₂ residual e distribuição por garrafa.',
+                    'Calcula quanto preparar de priming e quanto de solução colocar em cada garrafa.',
                 'categoria' => 'Cálculos',
             ],
             'volume-mosto' => [
@@ -70,7 +70,8 @@ class ToolsMetadata
             ],
             'extracao-frio' => [
                 'label' => 'Extração a Frio',
-                'description' => 'Calcula o volume de água por peso de malte para extração de maltes escuros.',
+                'description' => 'Calcula o volume de água por peso de malte para extração de maltes escuros' .
+                    ' (Cold Steeping).',
                 'categoria' => 'Cálculos',
             ],
             'motor' => [
