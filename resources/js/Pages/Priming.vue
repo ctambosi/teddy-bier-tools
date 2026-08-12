@@ -1,27 +1,27 @@
 <script setup>
-import { computed, ref } from 'vue'
-import { Head, usePage } from '@inertiajs/vue3'
+import {computed, nextTick, ref} from 'vue'
+import {Head, usePage} from '@inertiajs/vue3'
 import axios from 'axios'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import CalculadoraCard from '@/Components/CalculadoraCard.vue'
-import { useDecimalInput, formatarPtBr } from '@/composables/useDecimalInput'
+import {useDecimalInput, formatarPtBr} from '@/composables/useDecimalInput'
 
 const ESTILOS = [
-    { label: 'Ales britânicas / Cask',  co2: 1.7 },
-    { label: 'Ales americanas',          co2: 2.4 },
-    { label: 'Stout / Porter',           co2: 2.1 },
-    { label: 'Lager europeia',           co2: 2.5 },
-    { label: 'Saison',                   co2: 3.0 },
-    { label: 'Belgian Ale / Tripel',     co2: 3.2 },
-    { label: 'Weizen',                   co2: 3.7 },
+    {label: 'Ales britânicas / Cask', co2: 1.7},
+    {label: 'Ales americanas', co2: 2.4},
+    {label: 'Stout / Porter', co2: 2.1},
+    {label: 'Lager europeia', co2: 2.5},
+    {label: 'Saison', co2: 3.0},
+    {label: 'Belgian Ale / Tripel', co2: 3.2},
+    {label: 'Weizen', co2: 3.7},
 ]
 
 const ACUCARES = [
-    { value: 'sucrose',         label: 'Açúcar refinado / cristal (sacarose)' },
-    { value: 'dextrose_mono',   label: 'Dextrose monohidratada (glicose)' },
-    { value: 'dextrose_anidra', label: 'Dextrose anidra' },
-    { value: 'dme',             label: 'Extrato seco de malte (DME)' },
-    { value: 'mel',             label: 'Mel' },
+    {value: 'sucrose', label: 'Açúcar refinado / cristal (sacarose)'},
+    {value: 'dextrose_mono', label: 'Dextrose monohidratada (glicose)'},
+    {value: 'dextrose_anidra', label: 'Dextrose anidra'},
+    {value: 'dme', label: 'Extrato seco de malte (DME)'},
+    {value: 'mel', label: 'Mel'},
 ]
 
 const GRAMAS_POR_LITRO_SUGERIDO = 7
@@ -36,12 +36,12 @@ const tipoAcucar = ref('sucrose')
 // em modo manual o usuário já digita o g/L direto, então o tipo não tem efeito.
 const usandoMel = computed(() => modo.value === 'co2' && tipoAcucar.value === 'mel')
 
-const volumeLitros           = useDecimalInput({ casas: 2 })
-const gramasPorLitroManual   = useDecimalInput({ casas: 1 })
-const targetCo2              = useDecimalInput({ casas: 1 })
-const tempFermentacao        = useDecimalInput({ casas: 1, negativo: true })
-const volumeSolucaoInicial   = useDecimalInput({ casas: 0 })
-const volumeSolucaoFinal     = useDecimalInput({ casas: 0 })
+const volumeLitros = useDecimalInput({casas: 2})
+const gramasPorLitroManual = useDecimalInput({casas: 1})
+const targetCo2 = useDecimalInput({casas: 1})
+const tempFermentacao = useDecimalInput({casas: 1, negativo: true})
+const volumeSolucaoInicial = useDecimalInput({casas: 0})
+const volumeSolucaoFinal = useDecimalInput({casas: 0})
 
 // Dosagem sugerida já vem preenchida, não é só placeholder.
 gramasPorLitroManual.set(GRAMAS_POR_LITRO_SUGERIDO)
@@ -52,6 +52,7 @@ function aplicarEstilo(co2) {
 }
 
 const resultado = ref(null)
+const resultadoEl = ref(null)
 // Baseado no resultado já calculado (não no select ao vivo), pra não mostrar
 // texto de mel com números de outro tipo caso o usuário troque o select sem recalcular.
 const resultadoUsandoMel = computed(() => resultado.value?.modo === 'co2' && resultado.value?.tipo_acucar === 'mel')
@@ -80,7 +81,7 @@ async function calcular() {
     resultado.value = null
     loading.value = true
     try {
-        const { data } = await axios.post(route('priming.calcular'), construirPayloadBase())
+        const {data} = await axios.post(route('priming.calcular'), construirPayloadBase())
         resultado.value = data
         // Sugestão inicial: volumes antes/depois já na razão que reproduz a estimativa
         // padrão (mesmo resultado mostrado acima) através da fórmula real — assim editar
@@ -92,10 +93,13 @@ async function calcular() {
             volumeSolucaoInicial.reset()
             volumeSolucaoFinal.reset()
         }
+        nextTick(() => {
+            resultadoEl.value?.scrollIntoView({behavior: 'smooth', block: 'start'})
+        })
     } catch (e) {
         erros.value = e.response?.data?.errors ?? {}
         if (!Object.keys(erros.value).length) {
-            erros.value = { _geral: 'Erro ao calcular. Verifique os valores informados.' }
+            erros.value = {_geral: 'Erro ao calcular. Verifique os valores informados.'}
         }
     } finally {
         loading.value = false
@@ -124,7 +128,7 @@ async function recalcularConcentracao() {
             payload.volume_solucao_inicial_ml = vi
             payload.volume_solucao_final_ml = vf
         }
-        const { data } = await axios.post(route('priming.calcular'), payload)
+        const {data} = await axios.post(route('priming.calcular'), payload)
         resultado.value = data
     } catch (e) {
         erros.value = e.response?.data?.errors ?? {}
@@ -153,7 +157,7 @@ function erroField(field) {
 </script>
 
 <template>
-    <Head :title="meta.label" />
+    <Head :title="meta.label"/>
     <AppLayout>
         <CalculadoraCard
             :titulo="meta.label"
@@ -171,18 +175,18 @@ function erroField(field) {
                     (ex.: 100 g de açúcar + 100 ml de água), ferva por 5 a 10 minutos e deixe esfriar
                     antes de misturar à cerveja.
                 </p>
-<!--                <p>
-                    A fervura evapora água e concentra o açúcar — por isso a solução pronta rende mais
-                    açúcar por ml do que a mistura crua. Sem essa informação, calculamos com uma solução
-                    típica (reduzida por uma fervura normal); se você medir o volume antes e depois de
-                    ferver, o cálculo fica exato para a sua receita.
-                </p>-->
+                <!--                <p>
+                                    A fervura evapora água e concentra o açúcar — por isso a solução pronta rende mais
+                                    açúcar por ml do que a mistura crua. Sem essa informação, calculamos com uma solução
+                                    típica (reduzida por uma fervura normal); se você medir o volume antes e depois de
+                                    ferver, o cálculo fica exato para a sua receita.
+                                </p>-->
                 <p>
-                    Primeiro, calcule o volume de solução de priming
-                    que você vai precisar fazer para carbonatar todo o lote.
+                    O primeiro cálculo informa a quantidade total de açúcar necessária para carbonatar todo o lote.
                 </p>
                 <p>
-                    Depois, obtenha a quantidade de solução a adicionar no tipo de garrafa que você vai utilizar.
+                    Depois, calcula a quantidade de solução a adicionar em cada garrafa,
+                    de acordo com o tamanho da garrafa utilizada.
                 </p>
             </div>
 
@@ -230,11 +234,11 @@ function erroField(field) {
                             :class="['w-full px-3 py-2 border rounded-lg text-sm text-right bg-white focus:outline-none focus:ring-2 focus:ring-amber-400 transition',
                                 erroField('gramas_por_litro') ? 'border-red-400' : 'border-gray-300']"
                         />
-                        <p v-if="erroField('gramas_por_litro')" class="mt-1 text-xs text-red-600">{{ erroField('gramas_por_litro') }}</p>
+                        <p v-if="erroField('gramas_por_litro')" class="mt-1 text-xs text-red-600">
+                            {{ erroField('gramas_por_litro') }}</p>
                         <p class="mt-1 text-xs text-gray-400">
-                            Sugestão: {{ formatarPtBr(GRAMAS_POR_LITRO_SUGERIDO, 1) }} g/L funciona bem para a maioria dos estilos.
-                            Com a solução já reduzida pela fervura, isso equivale à regra prática de 1 ml de solução para
-                            cada 100 ml de cerveja (ex.: 5 ml numa garrafa de 500 ml). Ajuste se quiser mais ou menos gás.
+                            Sugestão: {{ formatarPtBr(GRAMAS_POR_LITRO_SUGERIDO, 1) }}
+                            g/L funciona bem para a maioria dos estilos.
                         </p>
                     </div>
 
@@ -275,7 +279,8 @@ function erroField(field) {
                                     :class="['w-full px-3 py-2 border rounded-lg text-sm text-right bg-white focus:outline-none focus:ring-2 focus:ring-amber-400 transition',
                                         erroField('target_co2') ? 'border-red-400' : 'border-gray-300']"
                                 />
-                                <p v-if="erroField('target_co2')" class="mt-1 text-xs text-red-600">{{ erroField('target_co2') }}</p>
+                                <p v-if="erroField('target_co2')" class="mt-1 text-xs text-red-600">
+                                    {{ erroField('target_co2') }}</p>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">
@@ -290,7 +295,8 @@ function erroField(field) {
                                     :class="['w-full px-3 py-2 border rounded-lg text-sm text-right bg-white focus:outline-none focus:ring-2 focus:ring-amber-400 transition',
                                         erroField('temp_fermentacao') ? 'border-red-400' : 'border-gray-300']"
                                 />
-                                <p v-if="erroField('temp_fermentacao')" class="mt-1 text-xs text-red-600">{{ erroField('temp_fermentacao') }}</p>
+                                <p v-if="erroField('temp_fermentacao')" class="mt-1 text-xs text-red-600">
+                                    {{ erroField('temp_fermentacao') }}</p>
                                 <p class="mt-1 text-xs text-gray-400">Temp. final de fermentação / lagering</p>
                             </div>
                         </div>
@@ -312,13 +318,13 @@ function erroField(field) {
                     </select>
                 </div>
 
-                <hr class="border-gray-100" />
+                <hr class="border-gray-100"/>
 
                 <!-- Refinamento opcional: total do lote -->
                 <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Volume a envasar (L)
-<!--                        <span class="text-gray-400 font-normal">(opcional)</span>-->
+                        <!--                        <span class="text-gray-400 font-normal">(opcional)</span>-->
                     </label>
                     <input
                         :value="volumeLitros.display.value"
@@ -329,9 +335,11 @@ function erroField(field) {
                         :class="['w-full px-3 py-2 border rounded-lg text-sm text-right bg-white focus:outline-none focus:ring-2 focus:ring-amber-400 transition',
                             erroField('volume_litros') ? 'border-red-400' : 'border-gray-300']"
                     />
-                    <p v-if="erroField('volume_litros')" class="mt-1 text-xs text-red-600">{{ erroField('volume_litros') }}</p>
+                    <p v-if="erroField('volume_litros')" class="mt-1 text-xs text-red-600">{{
+                            erroField('volume_litros')
+                        }}</p>
                     <p class="mt-1 text-xs text-gray-400">
-                        Para saber quanto de solução de priming você deve preparar
+                        Quantos litros de cerveja você vai carbonatar no total.
                     </p>
                 </div>
 
@@ -354,55 +362,65 @@ function erroField(field) {
             </form>
 
             <!-- ==================== RESULTADO ==================== -->
-            <div v-if="resultado" class="mt-6 space-y-4">
+            <div v-if="resultado" ref="resultadoEl" class="mt-6 space-y-4">
 
                 <!-- Para o lote (só se volume informado) -->
-                <div v-if="resultado.gramas_total !== undefined" class="p-4 rounded-lg bg-green-50 border border-green-200">
+                <div v-if="resultado.gramas_total !== undefined"
+                     class="p-4 rounded-lg bg-green-50 border border-green-200">
                     <p class="text-sm text-green-700 font-medium text-center mb-3">Açúcar total para o lote</p>
                     <div class="text-center mb-3">
                         <p class="text-5xl font-bold text-green-800">{{ formatarPtBr(resultado.gramas_total, 1) }} g</p>
                         <p class="text-sm text-green-600 mt-1">{{ formatarPtBr(resultado.gramas_por_litro, 1) }} g/L</p>
                     </div>
 
-                    <div v-if="resultado.modo === 'co2'" class="grid grid-cols-2 gap-2 pb-3 border-b border-green-200 text-center">
+                    <div v-if="resultado.modo === 'co2'"
+                         class="grid grid-cols-2 gap-2 pb-3 border-b border-green-200 text-center">
                         <div>
                             <p class="text-xs text-green-600">CO₂ residual</p>
-                            <p class="text-lg font-semibold text-green-800">{{ formatarPtBr(resultado.co2_residual, 2) }} vol</p>
+                            <p class="text-lg font-semibold text-green-800">{{
+                                    formatarPtBr(resultado.co2_residual, 2)
+                                }} vol</p>
                         </div>
                         <div>
                             <p class="text-xs text-green-600">CO₂ a adicionar</p>
-                            <p class="text-lg font-semibold text-green-800">{{ formatarPtBr(resultado.co2_adicional, 2) }} vol</p>
+                            <p class="text-lg font-semibold text-green-800">{{
+                                    formatarPtBr(resultado.co2_adicional, 2)
+                                }} vol</p>
                         </div>
                     </div>
-                    <p v-if="resultado.modo === 'co2' && resultado.co2_adicional === 0" class="mt-3 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded p-2 text-center">
+                    <p v-if="resultado.modo === 'co2' && resultado.co2_adicional === 0"
+                       class="mt-3 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded p-2 text-center">
                         A cerveja já possui CO₂ residual suficiente para a meta. Nenhum açúcar é necessário.
                     </p>
 
                     <div v-if="resultadoUsandoMel" class="mt-4 pt-3 border-t border-green-200 text-center">
                         <p class="text-xs text-green-600">
                             Para mel: ferva os {{ formatarPtBr(resultado.gramas_total, 1) }} g de mel com só um pouco
-                            de água (o suficiente para pasteurizar) — sem diluir na proporção 1:1 usada para açúcar cristalino.
+                            de água (o suficiente para pasteurizar) — sem diluir na proporção 1:1 usada para açúcar
+                            cristalino.
                         </p>
                     </div>
                     <div v-else class="mt-4 pt-3 border-t border-green-200 text-center">
                         <p class="text-xs text-green-600">
-                            Receita sugerida (partes iguais): {{ formatarPtBr(resultado.gramas_total, 1) }} g de açúcar +
+                            Receita sugerida (partes iguais): {{ formatarPtBr(resultado.gramas_total, 1) }} g de açúcar
+                            +
                             {{ formatarPtBr(resultado.gramas_total, 1) }} ml de água
                         </p>
                         <p class="text-xs text-green-600 mt-2">Volume sugerido da solução antes da fervura</p>
-                        <p class="text-3xl font-bold text-green-800">{{ formatarPtBr(resultado.volume_solucao_sugerido_ml, 0) }} ml</p>
+                        <p class="text-3xl font-bold text-green-800">
+                            {{ formatarPtBr(resultado.volume_solucao_sugerido_ml, 0) }} ml</p>
                     </div>
                 </div>
 
                 <!-- Concentração real da solução (opcional, não se aplica a mel) -->
                 <div v-if="!resultadoUsandoMel" class="p-4 rounded-lg bg-amber-50 border border-amber-200">
-<!--                    <p class="text-sm text-amber-800 font-medium mb-1">Quer uma dosagem ainda mais precisa?</p>-->
+                    <!--                    <p class="text-sm text-amber-800 font-medium mb-1">Quer uma dosagem ainda mais precisa?</p>-->
                     <p class="text-xs text-amber-700 mb-3">
-                        O ideal é medir o volume da solução antes e depois de ferver para ter uma precisão maior da
-                        quantidade da açúcar presente na solução
-                        e então sabe quantos ml exatos de solução adicionar por litro.<br>
-                        Porém, preferir não medir, use os valores estimados abaixo que dará certo dentro de uma
-                        carbonatação média.
+                        Para maior precisão, o ideal é medir o volume da solução de priming antes e depois da fervura.
+                        Assim, é possível determinar com mais precisão a quantidade de açúcar presente na solução e
+                        calcular quantos ml devem ser adicionados por litro de cerveja.<br>
+                        Se não for possível fazer essa medição, utilize os valores estimados abaixo. Eles fornecem uma
+                        estimativa que vai funcionar para uma carbonatação média.
                     </p>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
@@ -418,7 +436,8 @@ function erroField(field) {
                                 :class="['w-full px-3 py-2 border rounded-lg text-sm text-right bg-white focus:outline-none focus:ring-2 focus:ring-amber-400 transition',
                                     erroField('volume_solucao_inicial_ml') ? 'border-red-400' : 'border-gray-300']"
                             />
-                            <p v-if="erroField('volume_solucao_inicial_ml')" class="mt-1 text-xs text-red-600">{{ erroField('volume_solucao_inicial_ml') }}</p>
+                            <p v-if="erroField('volume_solucao_inicial_ml')" class="mt-1 text-xs text-red-600">
+                                {{ erroField('volume_solucao_inicial_ml') }}</p>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">
@@ -433,7 +452,8 @@ function erroField(field) {
                                 :class="['w-full px-3 py-2 border rounded-lg text-sm text-right bg-white focus:outline-none focus:ring-2 focus:ring-amber-400 transition',
                                     erroField('volume_solucao_final_ml') ? 'border-red-400' : 'border-gray-300']"
                             />
-                            <p v-if="erroField('volume_solucao_final_ml')" class="mt-1 text-xs text-red-600">{{ erroField('volume_solucao_final_ml') }}</p>
+                            <p v-if="erroField('volume_solucao_final_ml')" class="mt-1 text-xs text-red-600">
+                                {{ erroField('volume_solucao_final_ml') }}</p>
                         </div>
                     </div>
                     <p v-if="recalculando" class="mt-2 text-xs text-amber-600">Recalculando…</p>
@@ -453,28 +473,17 @@ function erroField(field) {
                             class="flex justify-between items-center py-1.5 border-b border-blue-100 last:border-0"
                         >
                             <span class="text-sm text-gray-600">Garrafa {{ item.tamanho }} ml</span>
-                            <span class="text-sm font-semibold text-blue-800">{{ formatarPtBr(item.ml_solucao, 1) }} ml</span>
+                            <span class="text-sm font-semibold text-blue-800">{{
+                                    formatarPtBr(item.ml_solucao, 1)
+                                }} ml</span>
                         </div>
                         <div class="flex justify-between items-center py-1.5 border-b border-blue-100">
                             <span class="text-sm text-gray-600">Por litro</span>
-                            <span class="text-sm font-semibold text-blue-800">{{ formatarPtBr(resultado.ml_por_litro, 1) }} ml</span>
+                            <span class="text-sm font-semibold text-blue-800">{{
+                                    formatarPtBr(resultado.ml_por_litro, 1)
+                                }} ml</span>
                         </div>
                     </div>
-                    <p v-if="resultadoUsandoMel" class="mt-3 text-xs text-blue-600">
-                        Os ml acima assumem uma solução equivalente à do açúcar cristalino, que não se aplica bem ao mel.
-                        Para mel, prefira dosar pelo total em gramas ({{ formatarPtBr(resultado.gramas_por_litro, 1) }} g/L)
-                        em vez de medir por volume.
-                    </p>
-                    <p v-else class="mt-3 text-xs text-blue-600">
-                        <template v-if="resultado.concentracao_real">
-                            Concentração real da sua solução (considerando a água evaporada): {{ formatarPtBr(resultado.concentracao_g_por_ml, 3) }} g/ml.
-                        </template>
-                        <template v-else>
-                            Estimativa para uma solução 50/50 reduzida por uma fervura típica: {{ formatarPtBr(resultado.concentracao_g_por_ml, 1) }} g/ml.
-                            O quanto sua solução realmente reduz varia com o tempo de fervura — informe os volumes
-                            antes/depois de ferver acima para o cálculo exato da sua receita.
-                        </template>
-                    </p>
                 </div>
             </div>
         </CalculadoraCard>
