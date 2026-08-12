@@ -6,6 +6,14 @@ namespace App\Services;
 
 class DensidadeService
 {
+    // Potencial de extrato em pontos de densidade (GU = (SG-1)*1000) por kg
+    // dissolvido em 1 litro do volume total do lote. Derivado do PPG
+    // (points per pound per gallon) tradicional multiplicado por 8,3454
+    // (fator de conversão lb/gal → kg/L): sacarose 46 PPG, extrato de malte
+    // seco (DME) 44 PPG.
+    const POTENCIAL_ACUCAR_GU_KG_L  = 384.0;
+    const POTENCIAL_EXTRATO_GU_KG_L = 367.0;
+
     public static function sgParaBrix(float $sg): float
     {
         return ((182.4601 * $sg - 775.6821) * $sg + 1262.7794) * $sg - 669.5622;
@@ -92,6 +100,32 @@ class DensidadeService
             'densidade_grist'  => $densidadeGrist,
             'densidade_acucar' => $densidadeAcucar,
             'og'               => $ogFinal,
+        ];
+    }
+
+    public static function calcularCorrecaoMosto(
+        float $volume,
+        float $densidadeAtual,
+        float $densidadeDesejada
+    ): array {
+        if ($densidadeAtual > $densidadeDesejada) {
+            $pontosAtual    = ($densidadeAtual - 1) * 1000;
+            $pontosDesejado = ($densidadeDesejada - 1) * 1000;
+            $volumeFinal    = $volume * $pontosAtual / $pontosDesejado;
+
+            return [
+                'tipo'                 => 'agua',
+                'volume_agua_litros'   => $volumeFinal - $volume,
+                'volume_final_litros'  => $volumeFinal,
+            ];
+        }
+
+        $pontosNecessarios = ($densidadeDesejada - $densidadeAtual) * 1000;
+
+        return [
+            'tipo'       => 'fermentavel',
+            'acucar_kg'  => $pontosNecessarios * $volume / self::POTENCIAL_ACUCAR_GU_KG_L,
+            'extrato_kg' => $pontosNecessarios * $volume / self::POTENCIAL_EXTRATO_GU_KG_L,
         ];
     }
 

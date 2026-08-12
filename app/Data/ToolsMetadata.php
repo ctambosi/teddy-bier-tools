@@ -20,6 +20,12 @@ class ToolsMetadata
                     'Corrige a leitura do refratômetro após o início da fermentação.',
                 'categoria' => 'Correções',
             ],
+            'correcao-mosto' => [
+                'label' => 'Correção de Densidade do Mosto',
+                'description' =>
+                    'Calcula a água, o açúcar ou o extrato de malte para ajustar o mosto à densidade desejada.',
+                'categoria' => 'Correções',
+            ],
             'pressao-temperatura' => [
                 'label' => 'Pressão × Temperatura',
                 'description' =>

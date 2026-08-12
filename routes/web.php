@@ -16,6 +16,7 @@ use App\Http\Controllers\AdicaoAlcoolicaController;
 use App\Http\Controllers\MotorController;
 use App\Http\Controllers\VolumeMostoController;
 use App\Http\Controllers\PrimingController;
+use App\Http\Controllers\CorrecaoMostoController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -68,3 +69,6 @@ Route::post('/volume-mosto', [VolumeMostoController::class, 'calcular'])->name('
 
 Route::get('/priming',  [PrimingController::class, 'show'])->name('priming');
 Route::post('/priming', [PrimingController::class, 'calcular'])->name('priming.calcular');
+
+Route::get('/correcao-mosto',  [CorrecaoMostoController::class, 'show'])->name('correcao-mosto');
+Route::post('/correcao-mosto', [CorrecaoMostoController::class, 'calcular'])->name('correcao-mosto.calcular');
