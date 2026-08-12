@@ -17,6 +17,7 @@ use App\Http\Controllers\MotorController;
 use App\Http\Controllers\VolumeMostoController;
 use App\Http\Controllers\PrimingController;
 use App\Http\Controllers\CorrecaoMostoController;
+use App\Http\Controllers\AcessoController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -72,3 +73,5 @@ Route::post('/priming', [PrimingController::class, 'calcular'])->name('priming.c
 
 Route::get('/correcao-mosto',  [CorrecaoMostoController::class, 'show'])->name('correcao-mosto');
 Route::post('/correcao-mosto', [CorrecaoMostoController::class, 'calcular'])->name('correcao-mosto.calcular');
+
+Route::get('/contador', [AcessoController::class, 'show'])->name('contador');
