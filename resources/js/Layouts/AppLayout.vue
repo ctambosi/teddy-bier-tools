@@ -43,54 +43,71 @@ function closeDropdowns() {
                         <span>Teddy Bier Tools</span>
                     </Link>
 
-                    <!-- Menu desktop -->
-                    <div class="hidden md:flex items-center gap-1">
-                        <div
-                            v-for="group in navGroups"
-                            :key="group.name"
-                            class="relative"
-                        >
-                            <button
-                                @click.stop="toggleDropdown(group.name)"
-                                class="flex items-center gap-1 px-3 py-2 text-sm text-gray-300 hover:text-amber-400 hover:bg-gray-800 rounded-md transition-colors"
-                                :class="{ 'text-amber-400 bg-gray-800': openDropdown === group.name }"
-                            >
-                                {{ group.label }}
-                                <svg class="w-4 h-4 transition-transform" :class="{ 'rotate-180': openDropdown === group.name }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </button>
-
-                            <!-- Dropdown -->
+                    <div class="flex items-center gap-2">
+                        <!-- Menu desktop -->
+                        <div class="hidden md:flex items-center gap-1">
                             <div
-                                v-show="openDropdown === group.name"
-                                class="absolute left-0 top-full mt-1 w-52 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50 py-1"
+                                v-for="group in navGroups"
+                                :key="group.name"
+                                class="relative"
                             >
-                                <a
-                                    v-for="link in group.links"
-                                    :key="link.href"
-                                    :href="link.href"
-                                    @click="closeDropdowns"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-700 transition-colors"
+                                <button
+                                    @click.stop="toggleDropdown(group.name)"
+                                    class="flex items-center gap-1 px-3 py-2 text-sm text-gray-300 hover:text-amber-400 hover:bg-gray-800 rounded-md transition-colors"
+                                    :class="{ 'text-amber-400 bg-gray-800': openDropdown === group.name }"
                                 >
-                                    {{ link.label }}
-                                </a>
+                                    {{ group.label }}
+                                    <svg class="w-4 h-4 transition-transform" :class="{ 'rotate-180': openDropdown === group.name }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
+
+                                <!-- Dropdown -->
+                                <div
+                                    v-show="openDropdown === group.name"
+                                    class="absolute left-0 top-full mt-1 w-52 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50 py-1"
+                                >
+                                    <a
+                                        v-for="link in group.links"
+                                        :key="link.href"
+                                        :href="link.href"
+                                        @click="closeDropdowns"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-700 transition-colors"
+                                    >
+                                        {{ link.label }}
+                                    </a>
+                                </div>
                             </div>
+
                         </div>
 
-                    </div>
+                        <!-- Instagram -->
+                        <a
+                            href="https://www.instagram.com/teddybierblumenau"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="p-2 text-gray-300 hover:text-amber-400 hover:bg-gray-800 rounded-md transition-colors"
+                            aria-label="Instagram"
+                        >
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                                <line x1="17.5" y1="6.5" x2="17.5" y2="6.5" />
+                            </svg>
+                        </a>
 
-                    <!-- Botão hambúrguer (mobile) -->
-                    <button
-                        @click="mobileMenuOpen = !mobileMenuOpen; openDropdown = null"
-                        class="md:hidden p-2 text-gray-300 hover:text-amber-400 hover:bg-gray-800 rounded-md transition-colors"
-                        aria-label="Menu"
-                    >
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path v-if="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                            <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
+                        <!-- Botão hambúrguer (mobile) -->
+                        <button
+                            @click="mobileMenuOpen = !mobileMenuOpen; openDropdown = null"
+                            class="md:hidden p-2 text-gray-300 hover:text-amber-400 hover:bg-gray-800 rounded-md transition-colors"
+                            aria-label="Menu"
+                        >
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path v-if="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                                <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </div>
 
