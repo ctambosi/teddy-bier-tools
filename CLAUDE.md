@@ -57,9 +57,11 @@ Fórmula SG→Brix: `((182.4601×SG−775.6821)×SG+1262.7794)×SG−669.5622`
 |------|-----------|-----------|
 | `pressao` | `PressaoController` | Bar ↔ PSI — `calcularPressao()` |
 | `pressao-temperatura` | `PressaoTemperaturaController` | CO₂+T°C → bar — `calcularPressaoCarbonatacao()` |
-| `priming` | `PrimingController` | CO₂ residual, 5 açúcares, distribuição/garrafa — `calcularPriming()` |
+| `priming` | `PrimingController` | Fluxo único (dosagem por CO₂ ou g/L manual, campos de lote opcionais) — `calcularPriming()` |
 
-Constante: `PSI_POR_BAR=14.5037738007` | `FATORES_ACUCAR`: sucrose 2.0, dextrose mono 2.09, dextrose anidra 1.89, DME 2.73, mel 2.69
+Constante: `PSI_POR_BAR=14.5037738007` | `FATORES_ACUCAR` (g de açúcar por litro por volume de CO₂, já com a densidade do CO₂ ~1,969 g/L/vol embutida): sucrose 3.86, dextrose mono 4.48, dextrose anidra 4.07, DME 5.25, mel 4.95  
+`co2Residual(tempC)`: converte °C→°F internamente (`Tf = 9×Tc/5+32`) antes de aplicar `3.0378 − 0.050062×Tf + 0.00026555×Tf²` — a fórmula é calibrada em Fahrenheit (fonte: Top Down Brew / Brew Your Own)  
+Priming, concentração da solução (g de açúcar por ml): `CONCENTRACAO_MISTURA_G_POR_ML=0.5` (solução recém-misturada 1:1 açúcar:água, base do cálculo por Vi/Vf quando o usuário mede volume antes/depois de ferver) | `CONCENTRACAO_PADRAO_G_POR_ML=0.7` (estimativa quando Vi/Vf não são informados, assumindo fervura típica de 5-10min — reconcilia a dosagem de referência de 7g/L com a regra prática "1ml de solução por 100ml de cerveja")
 
 ### AlcoolService
 | Rota | Controller | Descrição |

@@ -18,10 +18,16 @@ export function formataDuasCasasDecimais(digits) {
     return intFormatted + ',' + decPart
 }
 
+export function formataSemCasaDecimal(digits) {
+    if (!digits) return ''
+    return parseInt(digits, 10).toLocaleString('pt-BR')
+}
+
 export function formatarPtBr(value, decimais = 1) {
     if (value === null || value === undefined || value === '') return ''
-    const str = String(value).replace(/\./g, '').replace(',', '.')
-    const num = parseFloat(str)
+    const num = typeof value === 'number'
+        ? value
+        : parseFloat(String(value).replace(/\./g, '').replace(',', '.'))
     if (isNaN(num)) return ''
     return num.toLocaleString('pt-BR', { minimumFractionDigits: decimais, maximumFractionDigits: decimais })
 }
@@ -36,10 +42,13 @@ export function useDecimalInput({ negativo = false, casas = 1 } = {}) {
     const numeric = ref('')
 
     function _formatar(digits) {
-        return casas === 2 ? formataDuasCasasDecimais(digits) : formataUmaCasaDecimal(digits)
+        if (casas === 0) return formataSemCasaDecimal(digits)
+        if (casas === 2) return formataDuasCasasDecimais(digits)
+        return formataUmaCasaDecimal(digits)
     }
 
     function _toNumeric(digits) {
+        if (casas === 0) return String(parseInt(digits, 10))
         if (casas === 2) {
             return digits.length < 3
                 ? '0.' + digits.padStart(2, '0')
@@ -53,9 +62,9 @@ export function useDecimalInput({ negativo = false, casas = 1 } = {}) {
         const isNeg = negativo && raw.startsWith('-')
         const digits = raw.replace(/\D/g, '')
         if (!digits) {
-            display.value = ''
+            display.value = isNeg ? '-' : ''
             numeric.value = ''
-            e.target.value = ''
+            e.target.value = display.value
             return
         }
         const formatted = _formatar(digits)
